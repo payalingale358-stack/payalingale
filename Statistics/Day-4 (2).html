@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistics for Data Science | Measures of Position & Relationship</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Fraunces:ital,wght@0,300;0,600;0,900;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #151820;
+    --surface2: #1c2030;
+    --border: #252a3a;
+    --accent: #4fffb0;
+    --accent2: #ff6b6b;
+    --accent3: #ffd166;
+    --accent4: #74b9ff;
+    --text: #e8eaf0;
+    --text-muted: #7a8099;
+    --text-dim: #4a5068;
+    --code-bg: #0a0c12;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Fraunces', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  /* ── HERO ─────────────────────────────────────────── */
+  .hero {
+    padding: 80px 40px 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(79,255,176,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-tag::before { content: '◆'; font-size: 8px; }
+  .hero h1 {
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 20px;
+    letter-spacing: -2px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    font-size: 18px;
+    color: var(--text-muted);
+    max-width: 600px;
+    font-style: italic;
+    font-weight: 300;
+  }
+  .chapter-badges {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+  }
+  .badge-green { background: rgba(79,255,176,0.1); border: 1px solid rgba(79,255,176,0.3); color: var(--accent); }
+  .badge-red   { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); color: var(--accent2); }
+
+  /* ── TOC ──────────────────────────────────────────── */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 30px;
+    max-width: 1100px;
+    margin: 40px auto;
+  }
+  .toc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .toc a {
+    display: inline-block;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    margin: 4px 16px 4px 0;
+    font-family: 'JetBrains Mono', monospace;
+    transition: color 0.2s;
+  }
+  .toc a:hover { color: var(--accent); }
+
+  /* ── MAIN LAYOUT ──────────────────────────────────── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 40px 80px; }
+
+  /* ── CHAPTER HEADER ───────────────────────────────── */
+  .chapter {
+    margin-top: 70px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+  .chapter-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 50px;
+  }
+  .chapter-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 80px;
+    font-weight: 700;
+    color: var(--text-dim);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .chapter-info h2 {
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+  .chapter-info h2 .hl { color: var(--accent); }
+  .chapter-info h2 .hl2 { color: var(--accent2); }
+  .chapter-desc {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 15px;
+    margin-top: 8px;
+  }
+
+  /* ── TOPIC CARD ───────────────────────────────────── */
+  .topic {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(20px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .topic-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 28px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .topic-head:hover { background: #1f2535; }
+  .topic-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    width: 28px;
+  }
+  .topic-head h3 {
+    font-size: 19px;
+    font-weight: 600;
+    flex: 1;
+    letter-spacing: -0.3px;
+  }
+  .topic-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .topic-body { padding: 28px 32px; }
+
+  /* ── CONTENT BLOCKS ───────────────────────────────── */
+  .what-is {
+    background: rgba(79,255,176,0.04);
+    border-left: 3px solid var(--accent);
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    border-radius: 0 4px 4px 0;
+  }
+  .what-is .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .what-is p { font-size: 15px; color: var(--text); }
+
+  .formula-box {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent3);
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+  .formula-box .f-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent3);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: var(--accent3);
+    font-weight: 600;
+    line-height: 2;
+  }
+  .formula-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+
+  .steps-block { margin: 20px 0; }
+  .steps-block .s-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent4);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .step-n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent4);
+    background: rgba(116,185,255,0.1);
+    border: 1px solid rgba(116,185,255,0.3);
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step p { font-size: 15px; color: var(--text); padding-top: 4px; }
+
+  .example-box {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent2);
+    padding: 22px 26px;
+    margin: 20px 0;
+  }
+  .ex-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .data-row {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--accent3);
+    background: rgba(255,209,102,0.05);
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    border-left: 2px solid rgba(255,209,102,0.4);
+  }
+  .calc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 2;
+    margin-bottom: 8px;
+  }
+  .result {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: var(--accent);
+    font-weight: 700;
+    background: rgba(79,255,176,0.06);
+    padding: 10px 14px;
+    border-left: 2px solid var(--accent);
+    margin-top: 10px;
+  }
+
+  .insight {
+    background: rgba(255,209,102,0.06);
+    border: 1px solid rgba(255,209,102,0.2);
+    padding: 14px 18px;
+    margin-top: 16px;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--accent3);
+  }
+  .insight::before { content: '💡 '; }
+
+  /* ── TABLE ────────────────────────────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    margin: 16px 0;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--accent4);
+    padding: 10px 14px;
+    text-align: left;
+    border: 1px solid var(--border);
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+  td {
+    padding: 9px 14px;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  td.val { color: var(--accent3); }
+  td.highlight { color: var(--accent); font-weight: 600; }
+
+  /* ── SCATTER VISUAL ───────────────────────────────── */
+  .scatter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 20px 0;
+  }
+  .scatter-card {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    padding: 20px;
+    text-align: center;
+  }
+  .scatter-card svg { width: 100%; height: 160px; }
+  .scatter-card .sc-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    letter-spacing: 1px;
+  }
+  .scatter-card .sc-r {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+
+  /* ── DIVIDER ──────────────────────────────────────── */
+  .section-div {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 20px 0;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .section-div::before, .section-div::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── FOOTER ───────────────────────────────────────── */
+  .footer {
+    border-top: 1px solid var(--border);
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .footer p span { color: var(--accent); }
+
+  p { margin-bottom: 12px; font-size: 15px; }
+  p:last-child { margin-bottom: 0; }
+
+  @media (max-width: 700px) {
+    .hero { padding: 50px 20px 40px; }
+    .container { padding: 0 20px 60px; }
+    .chapter-num { font-size: 50px; }
+    .scatter-grid { grid-template-columns: 1fr; }
+    .footer { padding: 20px; }
+    .toc { margin: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══════════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-tag">Data Science — Statistics Series</div>
+  <h1>Measures of<br><span>Position</span> &amp; Relationship</h1>
+  <p>A complete, hands-on guide for data science students — from Z-scores to correlation coefficients.</p>
+  <div class="chapter-badges">
+    <span class="badge badge-green">Chapter 8 — Position</span>
+    <span class="badge badge-red">Chapter 9 — Relationship</span>
+  </div>
+</div>
+
+<!-- ══ TOC ═══════════════════════════════════════════════════ -->
+<div class="toc" style="margin: 40px auto; max-width:1100px; margin-left:auto; margin-right:auto;">
+  <div class="toc-title">// Table of Contents</div>
+  <a href="#zscore">Z-Scores</a>
+  <a href="#percentile">Percentile Ranks</a>
+  <a href="#deciles">Deciles</a>
+  <a href="#qd">Quartile Deviation</a>
+  <a href="#standard">Standard Scores</a>
+  <a href="#covariance">Covariance</a>
+  <a href="#correlation">Coefficient of Correlation</a>
+  <a href="#scatter">Scatter Plots</a>
+</div>
+
+<div class="container">
+
+<!-- ════════════════════════════════════════════════════════════
+     CHAPTER 8 — MEASURES OF POSITION
+═════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">08</div>
+    <div class="chapter-info">
+      <h2>Measures of <span class="hl">Position</span></h2>
+      <p class="chapter-desc">Where does a single value stand within a distribution?</p>
+    </div>
+  </div>
+
+  <!-- ── Z-SCORE ──────────────────────────────────────────── -->
+  <div class="topic" id="zscore">
+    <div class="topic-head">
+      <span class="topic-num">8.1</span>
+      <h3>Z-Scores (Standardization)</h3>
+      <span class="topic-icon">📐</span>
+    </div>
+    <div class="topic-body">
+
+      <div class="what-is">
+        <div class="label">// What is it?</div>
+        <p>A <strong>Z-score</strong> tells you <em>how many standard deviations</em> a data point is from the mean. It removes units and puts all data on a common scale — essential for comparing apples to oranges in data science.</p>
+      </div>
+
+      <div class="formula-box">
+        <div class="f-label">// Formula</div>
+        <div class="formula">Z = (X − μ) / σ</div>
+        <div class="formula-note">
+          X = individual value &nbsp;|&nbsp; μ = mean &nbsp;|&nbsp; σ = standard deviation
+        </div>
+      </div>
+
+      <div class="steps-block">
+        <div class="s-label">// Step-by-Step Process</div>
+        <div class="step"><span class="step-n">1</span><p>Find the <strong>mean (μ)</strong> of the dataset.</p></div>
+        <div class="step"><span class="step-n">2</span><p>Find the <strong>standard deviation (σ)</strong> of the dataset.</p></div>
+        <div class="step"><span class="step-n">3</span><p>Subtract the mean from the data point: <code style="color:var(--accent3)">(X − μ)</code></p></div>
+        <div class="step"><span class="step-n">4</span><p>Divide that result by the standard deviation.</p></div>
+        <div class="step"><span class="step-n">5</span><p>Interpret: Z=0 → at mean | Z=+2 → 2 SDs above | Z=−1 → 1 SD below.</p></div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-label">// Practical Example — Exam Scores</div>
+        <div class="data-row">Dataset: Student scores → [55, 60, 65, 70, 75, 80, 85, 90, 95, 100]</div>
+        <div class="calc">Mean (μ)  = (55+60+65+70+75+80+85+90+95+100) / 10 = 775/10 = 77.5</div>
+        <div class="calc">σ         = √[(Σ(X−μ)²)/n] ≈ 14.36</div>
+        <div class="calc">Z for X=55  →  (55 − 77.5) / 14.36  = −22.5 / 14.36 ≈ −1.57</div>
+        <div class="calc">Z for X=100 →  (100 − 77.5) / 14.36 = 22.5 / 14.36  ≈ +1.57</div>
+        <div class="result">✓  Score of 55 is 1.57 SDs below average. Score of 100 is 1.57 SDs above.</div>
+      </div>
+
+      <div class="insight">Z-scores &gt; 3 or &lt; −3 are typically flagged as outliers in data science pipelines. Libraries like scikit-learn use Z-score standardization (StandardScaler) before feeding data to ML models.</div>
+    </div>
+  </div>
+
+  <!-- ── PERCENTILE RANK ──────────────────────────────────── -->
+  <div class="topic" id="percentile">
+    <div class="topic-head">
+      <span class="topic-num">8.2</span>
+      <h3>Percentile Ranks</h3>
+      <span class="topic-icon">📊</span>
+    </div>
+    <div class="topic-body">
+
+      <div class="what-is">
+        <div class="label">// What is it?</div>
+        <p>A <strong>percentile rank</strong> tells you the percentage of values in a dataset that fall <em>at or below</em> a given value. If you're in the 90th percentile, you scored better than 90% of the group.</p>
+      </div>
+
+      <div class="formula-box">
+        <div class="f-label">// Formula</div>
+        <div class="formula">PR = (Number of values ≤ X / Total N) × 100</div>
+        <div class="formula-note">
+          Alternative: PR = (L + 0.5E) / N × 100 &nbsp;&nbsp;where L = below X, E = equal to X
+        </div>
+      </div>
+
+      <div class="steps-block">
+        <div class="s-label">// Step-by-Step Process</div>
+        <div class="step"><span class="step-n">1</span><p>Sort the dataset in ascending order.</p></div>
+        <div class="step"><span class="step-n">2</span><p>Count how many values are <strong>below</strong> the target value (L).</p></div>
+        <div class="step"><span class="step-n">3</span><p>Count how many values are <strong>equal</strong> to the target (E).</p></div>
+        <div class="step"><span class="step-n">4</span><p>Apply formula: <code style="color:var(--accent3)">(L + 0.5E) / N × 100</code></p></div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-label">// Practical Example — Test Scores</div>
+        <div class="data-row">Sorted scores: [42, 55, 58, 63, 67, 72, 75, 80, 88, 95]  →  N = 10</div>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:10px;">Find the percentile rank of score = 72:</p>
+        <div class="calc">L (values below 72)  = 5  (42, 55, 58, 63, 67)</div>
+        <div class="calc">E (values equal 72)  = 1</div>
+        <div class="calc">PR = (5 + 0.5×1) / 10 × 100 = (5.5 / 10) × 100 = 55</div>
+        <div class="result">✓  Score of 72 is at the 55th percentile — better than 55% of students.</div>
+      </div>
+
+      <div class="insight">NumPy's np.percentile() and pandas' .quantile() use this concept heavily for data exploration and outlier detection in EDA (Exploratory Data Analysis).</div>
+    </div>
+  </div>
+
+  <!-- ── DECILES ───────────────────────────────────────────── -->
+  <div class="topic" id="deciles">
+    <div class="topic-head">
+      <span class="topic-num">8.3</span>
+      <h3>Deciles</h3>
+      <span class="topic-icon">🔟</span>
+    </div>
+    <div class="topic-body">
+
+      <div class="what-is">
+        <div class="label">// What is it?</div>
+        <p><strong>Deciles</strong> divide sorted data into <em>10 equal parts</em>. D1 = 10th percentile, D5 = median (50th percentile), D9 = 90th percentile. They are a coarser but cleaner way to describe distribution spread.</p>
+      </div>
+
+      <div class="formula-box">
+        <div class="f-label">// Formula (for grouped data)</div>
+        <div class="formula">Dₙ = L + [ (nN/10 − CF) / f ] × h</div>
+        <div class="formula-note">
+          L = lower boundary | N = total | CF = cumulative freq before class | f = class freq | h = class width
+        </div>
+      </div>
+
+      <div class="steps-block">
+        <div class="s-label">// Step-by-Step (Ungrouped Data)</div>
+        <div class="step"><span class="step-n">1</span><p>Sort the data in ascending order.</p></div>
+        <div class="step"><span class="step-n">2</span><p>Calculate the position: <code style="color:var(--accent3)">Position = (n × N) / 10</code></p></div>
+        <div class="step"><span class="step-n">3</span><p>If position is whole → average that value and the next.</p></div>
+        <div class="step"><span class="step-n">4</span><p>If position is decimal → round up, take that indexed value.</p></div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-label">// Practical Example — Monthly Salaries (₹ thousands)</div>
+        <div class="data-row">Sorted: [18, 22, 25, 30, 34, 38, 42, 47, 55, 60]  →  N = 10</div>
+        <table>
+          <tr><th>Decile</th><th>Position Formula</th><th>Position</th><th>Value (₹k)</th><th>Meaning</th></tr>
+          <tr><td>D1</td><td>1×10/10</td><td class="val">1</td><td class="val">18</td><td>Bottom 10% earn ≤ ₹18k</td></tr>
+          <tr><td>D3</td><td>3×10/10</td><td class="val">3</td><td class="val">25</td><td>Bottom 30% earn ≤ ₹25k</td></tr>
+          <tr><td>D5</td><td>5×10/10</td><td class="val">5.5 → avg(34,38)</td><td class="highlight">36</td><td>Median salary = ₹36k</td></tr>
+          <tr><td>D9</td><td>9×10/10</td><td class="val">9</td><td class="val">55</td><td>Top 10% earn ≥ ₹55k</td></tr>
+        </table>
+        <div class="result">✓  D9 − D1 = 55 − 18 = ₹37k → This is the interdecile range (spread of middle 80%).</div>
+      </div>
+
+      <div class="insight">In data science, deciles are used in credit scoring (risk buckets), A/B test analysis, and feature binning (pd.qcut with q=10 in pandas).</div>
+    </div>
+  </div>
+
+  <!-- ── QUARTILE DEVIATION ────────────────────────────────── -->
+  <div class="topic" id="qd">
+    <div class="topic-head">
+      <span class="topic-num">8.4</span>
+      <h3>Quartile Deviation</h3>
+      <span class="topic-icon">📦</span>
+    </div>
+    <div class="topic-body">
+
+      <div class="what-is">
+        <div class="label">// What is it?</div>
+        <p><strong>Quartile Deviation (QD)</strong>, also called the <em>Semi-Interquartile Range</em>, measures the spread of the middle 50% of data. It is half the distance between Q3 (75th percentile) and Q1 (25th percentile). It's robust to outliers — unlike standard deviation.</p>
+      </div>
+
+      <div class="formula-box">
+        <div class="f-label">// Formulas</div>
+        <div class="formula">Q1 = value at (N+1)/4 th position</div>
+        <div class="formula">Q3 = value at 3(N+1)/4 th position</div>
+        <div class="formula">IQR = Q3 − Q1</div>
+        <div class="formula">QD  = (Q3 − Q1) / 2</div>
+        <div class="formula">Coefficient of QD = (Q3 − Q1) / (Q3 + Q1)</div>
+      </div>
+
+      <div class="steps-block">
+        <div class="s-label">// Step-by-Step</div>
+        <div class="step"><span class="step-n">1</span><p>Sort data in ascending order.</p></div>
+        <div class="step"><span class="step-n">2</span><p>Find Q1: value at position (N+1)/4</p></div>
+        <div class="step"><span class="step-n">3</span><p>Find Q3: value at position 3(N+1)/4</p></div>
+        <div class="step"><span class="step-n">4</span><p>Calculate QD = (Q3 − Q1) / 2</p></div>
+        <div class="step"><span class="step-n">5</span><p>For comparison across datasets → use Coefficient of QD.</p></div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-label">// Practical Example — House Prices (₹ Lakhs)</div>
+        <div class="data-row">Sorted: [15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65]  →  N = 11</div>
+        <div class="calc">Q1 position = (11+1)/4     = 3rd value  → Q1 = 25</div>
+        <div class="calc">Q3 position = 3×(11+1)/4  = 9th value  → Q3 = 55</div>
+        <div class="calc">IQR = Q3 − Q1 = 55 − 25 = 30</div>
+        <div class="calc">QD  = 30 / 2  = 15</div>
+        <div class="calc">Coefficient of QD = (55−25)/(55+25) = 30/80 = 0.375</div>
+        <div class="result">✓  QD = ₹15 Lakhs. Middle 50% of houses are within ±₹15L of median.</div>
+      </div>
+
+      <div class="insight">In pandas: df['price'].quantile(0.75) gives Q3. QD is the backbone of box plots — Matplotlib and Seaborn use Q1, Q3, and IQR to draw whiskers. Values beyond 1.5×IQR are plotted as outlier dots.</div>
+    </div>
+  </div>
+
+  <!-- ── STANDARD SCORES ───────────────────────────────────── -->
+  <div class="topic" id="standard">
+    <div class="topic-head">
+      <span class="topic-num">8.5</span>
+      <h3>Standard Scores</h3>
+      <span class="topic-icon">📏</span>
+    </div>
+    <div class="topic-body">
+
+      <div class="what-is">
+        <div class="label">// What is it?</div>
+        <p><strong>Standard scores</strong> are a family of transformed scores that convert raw data into a common interpretable scale. Z-score is one type. Others include <em>T-scores</em> (mean=50, SD=10) and <em>Stanine scores</em> (1–9 scale). They make cross-dataset comparison possible.</p>
+      </div>
+
+      <div class="formula-box">
+        <div class="f-label">// Standard Score Transformations</div>
+        <div class="formula">Z-score    : Z = (X − μ) / σ       [mean=0, SD=1]</div>
+        <div class="formula">T-score    : T = 50 + 10Z           [mean=50, SD=10]</div>
+        <div class="formula">Stanine    : S = INT(2Z + 5.5)      [scale 1-9, mean≈5]</div>
+        <div class="formula">IQ Scale   : IQ = 100 + 15Z         [mean=100, SD=15]</div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-label">// Practical Example — Comparing Two Students Across Subjects</div>
+        <div class="data-row">Arjun: Math=80 (μ=70, σ=10) | English=75 (μ=65, σ=15)</div>
+        <div class="data-row">Priya: Math=85 (μ=70, σ=10) | English=70 (μ=65, σ=15)</div>
+        <table>
+          <tr><th>Student</th><th>Subject</th><th>Raw Score</th><th>Z-Score</th><th>T-Score</th><th>Better?</th></tr>
+          <tr><td>Arjun</td><td>Math</td><td class="val">80</td><td class="val">+1.0</td><td class="val">60</td><td>—</td></tr>
+          <tr><td>Arjun</td><td>English</td><td class="val">75</td><td class="val">+0.67</td><td class="val">56.7</td><td>—</td></tr>
+          <tr><td>Priya</td><td>Math</td><td class="val">85</td><td class="highlight">+1.5</td><td class="highlight">65</td><td>✓ Math</td></tr>
+          <tr><td>Priya</td><td>English</td><td class="val">70</td><td class="val">+0.33</td><td class="val">53.3</td><td>—</td></tr>
+        </table>
+        <div class="result">✓  Priya is better in Math (Z=+1.5 vs +1.0) but Arjun performs better in English relative to his peers (Z=+0.67 vs +0.33).</div>
+      </div>
+
+      <div class="insight">Data science use case: scikit-learn's StandardScaler produces Z-scores. MinMaxScaler and RobustScaler are other standard score transformations used to normalize features before training ML models.</div>
+    </div>
+  </div>
+
+</div><!-- end chapter 8 -->
+
+
+<!-- ════════════════════════════════════════════════════════════
+     CHAPTER 9 — MEASURES OF RELATIONSHIP
+═════════════════════════════════════════════════════════════ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">09</div>
+    <div class="chapter-info">
+      <h2>Measures of <span class="hl2">Relationship</span></h2>
+      <p class="chapter-desc">How do two variables move together — and how strongly?</p>
+    </div>
+  </div>
+
+  <!-- ── COVARIANCE ────────────────────────────────────────── -->
+  <div class="topic" id="covariance">
+    <div class="topic-head">
+      <span class="topic-num">9.1</span>
+      <h3>Covariance</h3>
+      <span class="topic-icon">🔗</span>
+    </div>
+    <div class="topic-body">
+
+      <div class="what-is">
+        <div class="label">// What is it?</div>
+        <p><strong>Covariance</strong> measures the <em>direction</em> of the linear relationship between two variables. A positive covariance means both increase together. Negative means one increases as the other decreases. Zero means no linear relationship. However, the magnitude is hard to interpret because it depends on the units.</p>
+      </div>
+
+      <div class="formula-box">
+        <div class="f-label">// Formula</div>
+        <div class="formula">Cov(X,Y) = Σ[(Xᵢ − X̄)(Yᵢ − Ȳ)] / N</div>
+        <div class="formula-note">
+          For sample: divide by (N−1) instead of N (Bessel's correction)
+        </div>
+      </div>
+
+      <div class="steps-block">
+        <div class="s-label">// Step-by-Step</div>
+        <div class="step"><span class="step-n">1</span><p>Calculate the <strong>mean</strong> of X (X̄) and mean of Y (Ȳ).</p></div>
+        <div class="step"><span class="step-n">2</span><p>For each pair (Xᵢ, Yᵢ), compute <code style="color:var(--accent3)">(Xᵢ − X̄)</code> and <code style="color:var(--accent3)">(Yᵢ − Ȳ)</code>.</p></div>
+        <div class="step"><span class="step-n">3</span><p>Multiply these deviations: <code style="color:var(--accent3)">(Xᵢ − X̄)(Yᵢ − Ȳ)</code></p></div>
+        <div class="step"><span class="step-n">4</span><p>Sum all products, divide by N (population) or N−1 (sample).</p></div>
+        <div class="step"><span class="step-n">5</span><p>Interpret sign: positive (+) = same direction | negative (−) = opposite direction.</p></div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-label">// Practical Example — Study Hours vs. Exam Score</div>
+        <div class="data-row">X (Hours): [2, 4, 5, 6, 8] | Y (Score): [50, 60, 65, 70, 80]</div>
+        <div class="calc">X̄ = (2+4+5+6+8)/5 = 25/5 = 5</div>
+        <div class="calc">Ȳ = (50+60+65+70+80)/5 = 325/5 = 65</div>
+        <table>
+          <tr><th>X</th><th>Y</th><th>X−X̄</th><th>Y−Ȳ</th><th>(X−X̄)(Y−Ȳ)</th></tr>
+          <tr><td>2</td><td>50</td><td class="val">−3</td><td class="val">−15</td><td class="highlight">45</td></tr>
+          <tr><td>4</td><td>60</td><td class="val">−1</td><td class="val">−5</td><td class="highlight">5</td></tr>
+          <tr><td>5</td><td>65</td><td class="val">0</td><td class="val">0</td><td class="highlight">0</td></tr>
+          <tr><td>6</td><td>70</td><td class="val">+1</td><td class="val">+5</td><td class="highlight">5</td></tr>
+          <tr><td>8</td><td>80</td><td class="val">+3</td><td class="val">+15</td><td class="highlight">45</td></tr>
+        </table>
+        <div class="calc">Sum of products = 45+5+0+5+45 = 100</div>
+        <div class="calc">Cov(X,Y) = 100 / 5 = 20</div>
+        <div class="result">✓  Cov = +20 → Positive relationship: more study hours → higher scores. But we can't compare this 20 with anything — we need correlation for that.</div>
+      </div>
+
+      <div class="insight">In Python: np.cov(X, Y) returns a 2×2 covariance matrix. The off-diagonal values are the covariance between X and Y. The covariance matrix is central to PCA (Principal Component Analysis).</div>
+    </div>
+  </div>
+
+  <!-- ── COEFFICIENT OF CORRELATION ───────────────────────── -->
+  <div class="topic" id="correlation">
+    <div class="topic-head">
+      <span class="topic-num">9.2</span>
+      <h3>Coefficient of Correlation (Pearson's r)</h3>
+      <span class="topic-icon">📈</span>
+    </div>
+    <div class="topic-body">
+
+      <div class="what-is">
+        <div class="label">// What is it?</div>
+        <p><strong>Pearson's correlation coefficient (r)</strong> is the <em>standardized covariance</em> — it tells you both the <em>direction</em> and <em>strength</em> of a linear relationship between two variables. It always lies between −1 and +1, making it interpretable regardless of units.</p>
+      </div>
+
+      <div class="formula-box">
+        <div class="f-label">// Formula</div>
+        <div class="formula">r = Cov(X,Y) / (σₓ × σᵧ)</div>
+        <div class="formula">  = Σ[(Xᵢ−X̄)(Yᵢ−Ȳ)] / √[Σ(Xᵢ−X̄)² × Σ(Yᵢ−Ȳ)²]</div>
+        <div class="formula-note">
+          r = +1 → perfect positive | r = 0 → no linear relationship | r = −1 → perfect negative
+        </div>
+      </div>
+
+      <div class="steps-block">
+        <div class="s-label">// Interpretation Scale</div>
+        <div class="step"><span class="step-n" style="background:rgba(79,255,176,0.2);border-color:var(--accent);color:var(--accent)">r</span><p><strong>0.90 to 1.00</strong> → Very Strong positive correlation</p></div>
+        <div class="step"><span class="step-n" style="background:rgba(116,185,255,0.15)">r</span><p><strong>0.70 to 0.89</strong> → Strong positive correlation</p></div>
+        <div class="step"><span class="step-n" style="background:rgba(255,209,102,0.15)">r</span><p><strong>0.50 to 0.69</strong> → Moderate positive correlation</p></div>
+        <div class="step"><span class="step-n" style="background:rgba(255,107,107,0.15)">r</span><p><strong>0.00 to 0.49</strong> → Weak or no correlation</p></div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-label">// Practical Example — Study Hours vs. Exam Score (continued)</div>
+        <div class="data-row">Using same data: X=[2,4,5,6,8], Y=[50,60,65,70,80]</div>
+        <div class="calc">Cov(X,Y) = 20  (calculated above)</div>
+        <div class="calc">Σ(X−X̄)² = (−3)²+(−1)²+0²+1²+3² = 9+1+0+1+9 = 20 → σₓ = √(20/5) = 2</div>
+        <div class="calc">Σ(Y−Ȳ)² = 225+25+0+25+225 = 500        → σᵧ = √(500/5) = 10</div>
+        <div class="calc">r = Cov(X,Y) / (σₓ × σᵧ) = 20 / (2×10) = 20/20 = 1.0</div>
+        <div class="result">✓  r = +1.0 → Perfect positive linear correlation. Every extra study hour perfectly predicts the score increase.</div>
+      </div>
+
+      <div class="example-box" style="margin-top:16px; border-top-color: var(--accent4);">
+        <div class="ex-label" style="color:var(--accent4)">// Real-world Example — Ice Cream vs. Drowning Rate</div>
+        <div class="data-row">Month: [Jan, Feb, Mar...Aug] | Ice Cream Sales: [100, 110, 130...400] | Drowning: [5, 6, 7...25]</div>
+        <div class="calc">Suppose r = +0.85 → Strong positive correlation</div>
+        <div class="result">⚠  Correlation ≠ Causation! Both are driven by the hidden variable: Summer Heat. This is called a <strong>spurious correlation</strong> — critical concept in data science.</div>
+      </div>
+
+      <div class="insight">Python: scipy.stats.pearsonr(X, Y) returns (r, p_value). The p-value tells you if the correlation is statistically significant. df.corr() in pandas computes pairwise Pearson correlation matrix for all numeric columns.</div>
+    </div>
+  </div>
+
+  <!-- ── SCATTER PLOTS ─────────────────────────────────────── -->
+  <div class="topic" id="scatter">
+    <div class="topic-head">
+      <span class="topic-num">9.3</span>
+      <h3>Scatter Plots Interpretation</h3>
+      <span class="topic-icon">🌐</span>
+    </div>
+    <div class="topic-body">
+
+      <div class="what-is">
+        <div class="label">// What is it?</div>
+        <p>A <strong>scatter plot</strong> is a 2D graph that plots each observation as a point using its (X, Y) values. It's the first visual tool to assess whether two variables have a linear, non-linear, or no relationship. Every data scientist starts correlation analysis by looking at the scatter plot.</p>
+      </div>
+
+      <!-- VISUAL SCATTER EXAMPLES -->
+      <div class="section-div">Pattern Types</div>
+
+      <div class="scatter-grid">
+        <!-- Strong Positive -->
+        <div class="scatter-card">
+          <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
+            <line x1="20" y1="120" x2="150" y2="120" stroke="#252a3a" stroke-width="1"/>
+            <line x1="20" y1="120" x2="20" y2="15" stroke="#252a3a" stroke-width="1"/>
+            <!-- Points: strong positive trend -->
+            <circle cx="30" cy="110" r="3.5" fill="#4fffb0" opacity="0.8"/>
+            <circle cx="42" cy="100" r="3.5" fill="#4fffb0" opacity="0.8"/>
+            <circle cx="55" cy="92" r="3.5" fill="#4fffb0" opacity="0.8"/>
+            <circle cx="68" cy="82" r="3.5" fill="#4fffb0" opacity="0.8"/>
+            <circle cx="80" cy="72" r="3.5" fill="#4fffb0" opacity="0.8"/>
+            <circle cx="93" cy="62" r="3.5" fill="#4fffb0" opacity="0.8"/>
+            <circle cx="105" cy="52" r="3.5" fill="#4fffb0" opacity="0.8"/>
+            <circle cx="118" cy="40" r="3.5" fill="#4fffb0" opacity="0.8"/>
+            <circle cx="130" cy="30" r="3.5" fill="#4fffb0" opacity="0.8"/>
+            <line x1="25" y1="115" x2="145" y2="22" stroke="#4fffb0" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
+            <text x="35" y="135" fill="#7a8099" font-size="9" font-family="monospace">X →</text>
+            <text x="5" y="40" fill="#7a8099" font-size="9" font-family="monospace" transform="rotate(-90,10,70)">Y ↑</text>
+          </svg>
+          <div class="sc-title">STRONG POSITIVE</div>
+          <div class="sc-r" style="color:var(--accent)">r ≈ +0.95</div>
+        </div>
+
+        <!-- Negative Correlation -->
+        <div class="scatter-card">
+          <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
+            <line x1="20" y1="120" x2="150" y2="120" stroke="#252a3a" stroke-width="1"/>
+            <line x1="20" y1="120" x2="20" y2="15" stroke="#252a3a" stroke-width="1"/>
+            <circle cx="30" cy="28" r="3.5" fill="#ff6b6b" opacity="0.8"/>
+            <circle cx="42" cy="38" r="3.5" fill="#ff6b6b" opacity="0.8"/>
+            <circle cx="55" cy="50" r="3.5" fill="#ff6b6b" opacity="0.8"/>
+            <circle cx="68" cy="60" r="3.5" fill="#ff6b6b" opacity="0.8"/>
+            <circle cx="80" cy="70" r="3.5" fill="#ff6b6b" opacity="0.8"/>
+            <circle cx="93" cy="82" r="3.5" fill="#ff6b6b" opacity="0.8"/>
+            <circle cx="105" cy="90" r="3.5" fill="#ff6b6b" opacity="0.8"/>
+            <circle cx="118" cy="100" r="3.5" fill="#ff6b6b" opacity="0.8"/>
+            <circle cx="130" cy="110" r="3.5" fill="#ff6b6b" opacity="0.8"/>
+            <line x1="25" y1="22" x2="145" y2="115" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
+            <text x="35" y="135" fill="#7a8099" font-size="9" font-family="monospace">X →</text>
+          </svg>
+          <div class="sc-title">STRONG NEGATIVE</div>
+          <div class="sc-r" style="color:var(--accent2)">r ≈ −0.92</div>
+        </div>
+
+        <!-- No Correlation -->
+        <div class="scatter-card">
+          <svg viewBox="0 0 160 140" xmlns="http://www.w3.org/2000/svg">
+            <line x1="20" y1="120" x2="150" y2="120" stroke="#252a3a" stroke-width="1"/>
+            <line x1="20" y1="120" x2="20" y2="15" stroke="#252a3a" stroke-width="1"/>
+            <circle cx="28" cy="55" r="3.5" fill="#ffd166" opacity="0.8"/>
+            <circle cx="40" cy="90" r="3.5" fill="#ffd166" opacity="0.8"/>
+            <circle cx="53" cy="35" r="3.5" fill="#ffd166" opacity="0.8"/>
+            <circle cx="65" cy="105" r="3.5" fill="#ffd166" opacity="0.8"/>
+            <circle cx="78" cy="60" r="3.5" fill="#ffd166" opacity="0.8"/>
+            <circle cx="90" cy="25" r="3.5" fill="#ffd166" opacity="0.8"/>
+            <circle cx="103" cy="95" r="3.5" fill="#ffd166" opacity="0.8"/>
+            <circle cx="115" cy="45" r="3.5" fill="#ffd166" opacity="0.8"/>
+            <circle cx="128" cy="78" r="3.5" fill="#ffd166" opacity="0.8"/>
+            <line x1="25" y1="67" x2="145" y2="67" stroke="#ffd166" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.4"/>
+            <text x="35" y="135" fill="#7a8099" font-size="9" font-family="monospace">X →</text>
+          </svg>
+          <div class="sc-title">NO CORRELATION</div>
+          <div class="sc-r" style="color:var(--accent3)">r ≈ 0.00</div>
+        </div>
+      </div>
+
+      <div class="steps-block" style="margin-top:24px;">
+        <div class="s-label">// How to Interpret a Scatter Plot — Checklist</div>
+        <div class="step"><span class="step-n">1</span><p><strong>Direction:</strong> Do points move up-right (positive) or down-right (negative)?</p></div>
+        <div class="step"><span class="step-n">2</span><p><strong>Strength:</strong> How tightly clustered are points around an imaginary line? Tight = strong, scattered = weak.</p></div>
+        <div class="step"><span class="step-n">3</span><p><strong>Form:</strong> Is the pattern linear (straight line) or curved (non-linear)? Pearson r only measures linear relationships!</p></div>
+        <div class="step"><span class="step-n">4</span><p><strong>Outliers:</strong> Are there any points far away from the main cluster? These can distort r significantly.</p></div>
+        <div class="step"><span class="step-n">5</span><p><strong>Clusters:</strong> Are there sub-groups? Multiple clusters may indicate hidden categorical variables.</p></div>
+      </div>
+
+      <div class="example-box">
+        <div class="ex-label">// Practical Example — Height vs. Weight</div>
+        <div class="data-row">X (Height in cm): [155, 160, 165, 170, 175, 180, 185] | Y (Weight in kg): [50, 55, 60, 65, 70, 75, 80]</div>
+        <table>
+          <tr><th>What we observe</th><th>Interpretation</th></tr>
+          <tr><td>Points go up-right</td><td class="val">Positive direction → Taller people tend to weigh more</td></tr>
+          <tr><td>Points tightly clustered</td><td class="val">Strong relationship → r ≈ +0.99</td></tr>
+          <tr><td>Straight line pattern</td><td class="val">Linear form → Linear regression is appropriate</td></tr>
+          <tr><td>No extreme outliers</td><td class="val">Data is clean, r is reliable</td></tr>
+        </table>
+        <div class="result">✓  A high, positive, linear scatter tells us to use Pearson r and linear regression to model this relationship.</div>
+      </div>
+
+      <div class="example-box" style="margin-top:16px; border-top-color: var(--accent4);">
+        <div class="ex-label" style="color:var(--accent4)">// Warning — Anscombe's Quartet</div>
+        <p style="font-size:14px; color: var(--text-muted); margin-bottom:10px;">Four datasets with identical summary statistics (mean, variance, r) but completely different scatter patterns:</p>
+        <table>
+          <tr><th>Dataset</th><th>r value</th><th>Visual Pattern</th><th>Appropriate Model?</th></tr>
+          <tr><td>I</td><td class="val">0.816</td><td>Linear scatter</td><td class="highlight">Yes — Linear</td></tr>
+          <tr><td>II</td><td class="val">0.816</td><td>Curved (quadratic)</td><td class="accent2" style="color:var(--accent2)">No — Use polynomial</td></tr>
+          <tr><td>III</td><td class="val">0.816</td><td>Linear + 1 outlier</td><td class="accent2" style="color:var(--accent2)">No — Fix outlier first</td></tr>
+          <tr><td>IV</td><td class="val">0.816</td><td>Vertical cluster</td><td class="accent2" style="color:var(--accent2)">No — Misleading r</td></tr>
+        </table>
+        <div class="result">⚠  ALWAYS visualize your data before trusting correlation numbers. This is the #1 rule in EDA.</div>
+      </div>
+
+      <div class="insight">Python code to create scatter plots: matplotlib.pyplot.scatter(X, Y) or seaborn.scatterplot(x='col1', y='col2', data=df). For full pair-wise scatter matrix: seaborn.pairplot(df) — a staple in every data science EDA workflow.</div>
+    </div>
+  </div>
+
+</div><!-- end chapter 9 -->
+
+</div><!-- end container -->
+
+<!-- ══ FOOTER ═════════════════════════════════════════════════ -->
+<div class="footer">
+  <p>Statistics for Data Science · Chapters 8 &amp; 9</p>
+  <p>Position · Relationship · <span>Made for learners</span></p>
+  <p>Covers: Z-scores · Percentiles · Deciles · QD · Covariance · Pearson r · Scatter Plots</p>
+</div>
+
+</body>
+</html>

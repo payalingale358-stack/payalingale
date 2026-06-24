@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability for Data Science</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+        
+        h2 {
+            color: #764ba2;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+            border-left: 5px solid #764ba2;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #667eea;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+        
+        h4 {
+            color: #555;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            font-size: 1.2em;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .definition-box {
+            background: #f0f4ff;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .example-box {
+            background: #fff9e6;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .industry-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .formula-box {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .formula {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #e65100;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+        
+        tr:hover {
+            background: #e8ecff;
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        .highlight {
+            background: #ffeb3b;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        
+        .note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .calculation {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05em;
+            line-height: 2;
+        }
+        
+        .step {
+            background: #fff;
+            border-left: 3px solid #9c27b0;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+        
+        .important {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .visual-box {
+            background: #fce4ec;
+            border-left: 5px solid #e91e63;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .comparison-table {
+            margin: 20px 0;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .key-point {
+            background: #e1f5fe;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid #03a9f4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎲 Probability for Data Science</h1>
+        <p class="subtitle">Understanding Uncertainty with Simple Examples</p>
+        
+        <h2>1. What is Probability?</h2>
+        
+        <div class="definition-box">
+            <h3>📌 Simple Definition</h3>
+            <p><strong>Probability</strong> is a measure of how likely something is to happen. It's a number between 0 and 1 (or 0% to 100%).</p>
+            
+            <ul>
+                <li><strong>Probability = 0</strong> → Event will NOT happen (impossible)</li>
+                <li><strong>Probability = 0.5</strong> → Event has 50% chance (equally likely)</li>
+                <li><strong>Probability = 1</strong> → Event will DEFINITELY happen (certain)</li>
+            </ul>
+            
+            <div class="formula">
+                Probability = (Number of favorable outcomes) / (Total number of outcomes)
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <h4>🌟 Simple Everyday Examples</h4>
+            
+            <div class="step">
+                <strong>Example 1: Coin Toss</strong><br>
+                Coin has 2 sides: Heads, Tails<br>
+                P(Heads) = 1/2 = 0.5 = 50%<br>
+                P(Tails) = 1/2 = 0.5 = 50%
+            </div>
+            
+            <div class="step">
+                <strong>Example 2: Rolling a Die</strong><br>
+                Die has 6 faces: 1, 2, 3, 4, 5, 6<br>
+                P(Getting a 4) = 1/6 ≈ 0.167 = 16.7%<br>
+                P(Getting even number) = 3/6 = 0.5 = 50%<br>
+                (Because 2, 4, 6 are even → 3 favorable outcomes)
+            </div>
+            
+            <div class="step">
+                <strong>Example 3: Drawing a Card</strong><br>
+                Deck has 52 cards<br>
+                P(Drawing a King) = 4/52 = 1/13 ≈ 0.077 = 7.7%<br>
+                (There are 4 kings in a deck)
+            </div>
+        </div>
+        
+        <div class="industry-box">
+            <h3>🏢 Real Industry Examples</h3>
+            
+            <div class="step">
+                <strong>E-commerce: Purchase Prediction</strong><br>
+                Out of 1000 website visitors, 50 make a purchase<br>
+                P(Purchase) = 50/1000 = 0.05 = 5%<br>
+                This is called "conversion rate"
+            </div>
+            
+            <div class="step">
+                <strong>Email: Spam Detection</strong><br>
+                Out of 100 emails, 30 are spam<br>
+                P(Spam) = 30/100 = 0.3 = 30%<br>
+                P(Not Spam) = 70/100 = 0.7 = 70%
+            </div>
+            
+            <div class="step">
+                <strong>Weather: Rain Prediction</strong><br>
+                Weather patterns show: Out of 100 similar days, 65 had rain<br>
+                P(Rain tomorrow) = 65/100 = 0.65 = 65%
+            </div>
+        </div>
+        
+        <h2>2. Types of Probability</h2>
+        
+        <h3>Type 1: Classical Probability (Theoretical)</h3>
+        
+        <div class="definition-box">
+            <p><strong>Definition:</strong> Based on mathematical reasoning. All outcomes are equally likely.</p>
+            <div class="formula">
+                P(Event) = (Favorable outcomes) / (Total outcomes)
+            </div>
+            <p><strong>Use when:</strong> You know all possible outcomes and they're equally likely</p>
+        </div>
+        
+        <div class="example-box">
+            <h4>📝 Manual Examples</h4>
+            
+            <div class="calculation">
+<strong>Example 1: Two Dice Roll</strong>
+
+Question: What's the probability of getting sum = 7?
+
+<strong>Step 1: Total outcomes</strong>
+Each die: 6 faces
+Two dice: 6 × 6 = 36 total outcomes
+
+<strong>Step 2: Favorable outcomes (sum = 7)</strong>
+(1,6), (2,5), (3,4), (4,3), (5,2), (6,1)
+Count = 6 favorable outcomes
+
+<strong>Step 3: Calculate probability</strong>
+P(Sum = 7) = 6/36 = 1/6 ≈ 0.167 = 16.7%
+
+<strong>Answer:</strong> 16.7% chance of getting sum = 7
+            </div>
+            
+            <div class="calculation">
+<strong>Example 2: Drawing Cards</strong>
+
+Question: Probability of drawing a red card from a deck?
+
+<strong>Step 1: Total outcomes</strong>
+Total cards = 52
+
+<strong>Step 2: Favorable outcomes</strong>
+Red cards = Hearts (13) + Diamonds (13) = 26
+
+<strong>Step 3: Calculate</strong>
+P(Red card) = 26/52 = 1/2 = 0.5 = 50%
+
+<strong>Answer:</strong> 50% chance
+            </div>
+        </div>
+        
+        <h3>Type 2: Empirical Probability (Experimental)</h3>
+        
+        <div class="definition-box">
+            <p><strong>Definition:</strong> Based on actual observations or experiments.</p>
+            <div class="formula">
+                P(Event) = (Number of times event occurred) / (Total trials)
+            </div>
+            <p><strong>Use when:</strong> You collect data from real-world observations</p>
+        </div>
+        
+        <div class="example-box">
+            <h4>📝 Manual Examples</h4>
+            
+            <div class="calculation">
+<strong>Example 1: Manufacturing Quality</strong>
+
+Experiment: Inspect 500 products from assembly line
+
+Results:
+- Defective products: 15
+- Good products: 485
+
+P(Defective) = 15/500 = 0.03 = 3%
+P(Good) = 485/500 = 0.97 = 97%
+
+<strong>Interpretation:</strong> 3% defect rate
+            </div>
+            
+            <div class="calculation">
+<strong>Example 2: Customer Behavior</strong>
+
+Observation: Track 1000 customers in a store
+
+Results:
+- Made purchase: 250
+- Did not purchase: 750
+
+P(Purchase) = 250/1000 = 0.25 = 25%
+
+<strong>Business insight:</strong> 25% conversion rate
+            </div>
+        </div>
+        
+        <div class="industry-box">
+            <h4>🤖 Data Science Application</h4>
+            
+            <div class="calculation">
+<strong>Machine Learning Model Evaluation</strong>
+
+Tested model on 200 emails:
+- Correctly identified spam: 85 out of 100 actual spam emails
+- Correctly identified non-spam: 92 out of 100 non-spam emails
+
+P(Correct spam detection) = 85/100 = 0.85 = 85%
+P(Correct non-spam detection) = 92/100 = 0.92 = 92%
+
+Overall accuracy = (85 + 92) / 200 = 177/200 = 0.885 = 88.5%
+
+<strong>Model performance:</strong> 88.5% accurate
+            </div>
+        </div>
+        
+        <h3>Type 3: Subjective Probability</h3>
+        
+        <div class="definition-box">
+            <p><strong>Definition:</strong> Based on personal judgment, intuition, or expertise.</p>
+            <p><strong>Use when:</strong> No data available, or event is unique</p>
+        </div>
+        
+        <div class="example-box">
+            <h4>Examples</h4>
+            <ul>
+                <li>"I think there's a 70% chance the project will succeed"</li>
+                <li>"This startup has 30% chance of getting funded"</li>
+                <li>"The new product has 80% chance of being popular"</li>
+            </ul>
+            <p><strong>Note:</strong> Based on experience and judgment, not calculation</p>
+        </div>
+        
+        <h2>3. Rules of Probability</h2>
+        
+        <h3>Rule 1: Probability Range Rule</h3>
+        
+        <div class="formula-box">
+            <div class="formula">
+                0 ≤ P(Event) ≤ 1
+            </div>
+            <p><strong>Meaning:</strong> Probability is always between 0 and 1</p>
+        </div>
+        
+        <h3>Rule 2: Complement Rule</h3>
+        
+        <div class="formula-box">
+            <div class="formula">
+                P(Not A) = 1 - P(A)
+            </div>
+            <p><strong>Meaning:</strong> Probability of NOT happening = 1 minus probability of happening</p>
+        </div>
+        
+        <div class="example-box">
+            <h4>📝 Examples</h4>
+            
+            <div class="calculation">
+<strong>Example 1: Weather</strong>
+
+P(Rain) = 0.6 = 60%
+P(No Rain) = 1 - 0.6 = 0.4 = 40%
+            </div>
+            
+            <div class="calculation">
+<strong>Example 2: Pass/Fail</strong>
+
+P(Pass exam) = 0.85 = 85%
+P(Fail exam) = 1 - 0.85 = 0.15 = 15%
+            </div>
+            
+            <div class="calculation">
+<strong>Example 3: Customer Purchase</strong>
+
+P(Customer buys) = 0.12 = 12%
+P(Customer doesn't buy) = 1 - 0.12 = 0.88 = 88%
+            </div>
+        </div>
+        
+        <h3>Rule 3: Addition Rule</h3>
+        
+        <div class="formula-box">
+            <h4>For Mutually Exclusive Events (can't happen together)</h4>
+            <div class="formula">
+                P(A or B) = P(A) + P(B)
+            </div>
+            
+            <h4>For Non-Mutually Exclusive Events (can happen together)</h4>
+            <div class="formula">
+                P(A or B) = P(A) + P(B) - P(A and B)
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <h4>📝 Mutually Exclusive Example</h4>
+            
+            <div class="calculation">
+<strong>Rolling a Die: Getting 2 OR 5</strong>
+
+P(2) = 1/6
+P(5) = 1/6
+
+These are mutually exclusive (can't get both at same time)
+
+P(2 or 5) = P(2) + P(5)
+          = 1/6 + 1/6
+          = 2/6
+          = 1/3 ≈ 0.333 = 33.3%
+            </div>
+            
+            <h4>📝 Non-Mutually Exclusive Example</h4>
+            
+            <div class="calculation">
+<strong>Drawing a Card: King OR Heart</strong>
+
+P(King) = 4/52 = 1/13
+P(Heart) = 13/52 = 1/4
+P(King of Hearts) = 1/52
+
+These overlap! (King of Hearts is both)
+
+P(King or Heart) = P(King) + P(Heart) - P(King and Heart)
+                 = 4/52 + 13/52 - 1/52
+                 = 16/52
+                 = 4/13 ≈ 0.308 = 30.8%
+
+Why subtract? To avoid counting King of Hearts twice!
+            </div>
+        </div>
+        
+        <div class="industry-box">
+            <h4>🏢 Industry Application</h4>
+            
+            <div class="calculation">
+<strong>Marketing Campaign Analysis</strong>
+
+Two campaigns running:
+- Email campaign: 5% conversion rate
+- Social media campaign: 8% conversion rate
+- Both campaigns: 2% (same people see both)
+
+What's probability a customer converts from either campaign?
+
+P(Email or Social) = P(Email) + P(Social) - P(Both)
+                   = 0.05 + 0.08 - 0.02
+                   = 0.11 = 11%
+
+<strong>Business insight:</strong> Combined campaigns give 11% conversion
+            </div>
+        </div>
+        
+        <h3>Rule 4: Multiplication Rule</h3>
+        
+        <div class="formula-box">
+            <h4>For Independent Events</h4>
+            <div class="formula">
+                P(A and B) = P(A) × P(B)
+            </div>
+            
+            <h4>For Dependent Events</h4>
+            <div class="formula">
+                P(A and B) = P(A) × P(B|A)
+            </div>
+            <p>where P(B|A) = probability of B given A happened</p>
+        </div>
+        
+        <div class="example-box">
+            <h4>📝 Independent Events Example</h4>
+            
+            <div class="calculation">
+<strong>Tossing Two Coins</strong>
+
+Coin 1: P(Heads) = 1/2
+Coin 2: P(Heads) = 1/2
+
+Events are independent (one doesn't affect the other)
+
+P(Both Heads) = P(Heads on Coin 1) × P(Heads on Coin 2)
+              = 1/2 × 1/2
+              = 1/4 = 0.25 = 25%
+            </div>
+            
+            <div class="calculation">
+<strong>Quality Control: Two Products</strong>
+
+P(Product 1 is good) = 0.95
+P(Product 2 is good) = 0.95
+
+Products are independent
+
+P(Both good) = 0.95 × 0.95
+             = 0.9025 = 90.25%
+            </div>
+            
+            <h4>📝 Dependent Events Example</h4>
+            
+            <div class="calculation">
+<strong>Drawing Cards Without Replacement</strong>
+
+Draw 2 cards from deck. What's P(both are Aces)?
+
+<strong>First draw:</strong>
+P(Ace) = 4/52 = 1/13
+
+<strong>Second draw (given first was Ace):</strong>
+Now only 3 Aces left, and 51 total cards
+P(Ace | First was Ace) = 3/51 = 1/17
+
+<strong>Both Aces:</strong>
+P(Both Aces) = P(First Ace) × P(Second Ace | First Ace)
+             = (4/52) × (3/51)
+             = 12/2652
+             = 1/221 ≈ 0.0045 = 0.45%
+            </div>
+        </div>
+        
+        <div class="industry-box">
+            <h4>🤖 Data Science Application: Click-Through Rate</h4>
+            
+            <div class="calculation">
+<strong>Multi-Step User Journey</strong>
+
+User sees ad → Clicks ad → Makes purchase
+
+P(Click | See ad) = 0.05 = 5%
+P(Purchase | Click) = 0.20 = 20%
+
+P(See ad AND Click AND Purchase) = P(See) × P(Click|See) × P(Purchase|Click)
+                                  = 1 × 0.05 × 0.20
+                                  = 0.01 = 1%
+
+<strong>Business insight:</strong> 1% overall conversion from ad to purchase
+This is called the "conversion funnel"
+            </div>
+        </div>
+        
+        <h3>Rule 5: Conditional Probability</h3>
+        
+        <div class="formula-box">
+            <div class="formula">
+                P(A|B) = P(A and B) / P(B)
+            </div>
+            <p><strong>Read as:</strong> Probability of A given B has happened</p>
+        </div>
+        
+        <div class="example-box">
+            <h4>📝 Complete Example</h4>
+            
+            <div class="calculation">
+<strong>Medical Test Example</strong>
+
+Population: 1000 people
+- 100 have disease
+- 900 don't have disease
+
+Test results:
+- Test positive among diseased: 90 out of 100
+- Test positive among healthy: 45 out of 900
+
+<strong>Question:</strong> If someone tests positive, what's the probability they actually have the disease?
+
+We need: P(Disease | Test Positive)
+
+<strong>Step 1: Find P(Test Positive)</strong>
+Total positive tests = 90 + 45 = 135
+P(Test Positive) = 135/1000 = 0.135
+
+<strong>Step 2: Find P(Disease and Test Positive)</strong>
+P(Disease and Test Positive) = 90/1000 = 0.09
+
+<strong>Step 3: Apply conditional probability</strong>
+P(Disease | Test Positive) = P(Disease and Test Positive) / P(Test Positive)
+                            = 0.09 / 0.135
+                            = 0.667 = 66.7%
+
+<strong>Answer:</strong> If test is positive, there's 66.7% chance of actually having the disease
+(Not 100%! This is why false positives matter)
+            </div>
+        </div>
+        
+        <div class="industry-box">
+            <h4>🏢 Real Industry Example: Fraud Detection</h4>
+            
+            <div class="calculation">
+<strong>Credit Card Fraud</strong>
+
+Out of 10,000 transactions:
+- 100 are fraudulent
+- 9,900 are legitimate
+
+Fraud detection system:
+- Flags 80 out of 100 fraud cases
+- Flags 500 out of 9,900 legitimate cases (false alarms)
+
+<strong>Question:</strong> If a transaction is flagged, what's the probability it's actually fraud?
+
+P(Fraud | Flagged) = ?
+
+<strong>Step 1: Total flagged</strong>
+Flagged = 80 + 500 = 580
+
+<strong>Step 2: Calculate</strong>
+P(Fraud | Flagged) = 80 / 580
+                    = 0.138 = 13.8%
+
+<strong>Business insight:</strong> Only 13.8% of flagged transactions are actually fraud!
+This means 86.2% are false alarms - need to improve the system!
+            </div>
+        </div>
+        
+        <h2>4. Permutations</h2>
+        
+        <div class="definition-box">
+            <h3>📌 What is a Permutation?</h3>
+            <p><strong>Permutation:</strong> An arrangement where ORDER MATTERS.</p>
+            <p><strong>Think:</strong> "How many ways can I arrange items in a specific order?"</p>
+            
+            <div class="formula">
+                P(n, r) = n! / (n - r)!
+            </div>
+            <p>where:</p>
+            <ul>
+                <li>n = total number of items</li>
+                <li>r = number of items to arrange</li>
+                <li>! = factorial (n! = n × (n-1) × (n-2) × ... × 1)</li>
+            </ul>
+        </div>
+        
+        <div class="key-point">
+            <h4>📚 Understanding Factorial</h4>
+            <div class="calculation">
+5! = 5 × 4 × 3 × 2 × 1 = 120
+4! = 4 × 3 × 2 × 1 = 24
+3! = 3 × 2 × 1 = 6
+2! = 2 × 1 = 2
+1! = 1
+0! = 1 (by definition)
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <h4>📝 Simple Examples</h4>
+            
+            <div class="calculation">
+<strong>Example 1: Arranging 3 Letters (A, B, C)</strong>
+
+How many ways can we arrange all 3 letters?
+
+P(3, 3) = 3! / (3-3)!
+        = 3! / 0!
+        = 6 / 1
+        = 6
+
+<strong>All arrangements:</strong>
+ABC, ACB, BAC, BCA, CAB, CBA
+
+<strong>Answer:</strong> 6 ways
+            </div>
+            
+            <div class="calculation">
+<strong>Example 2: Top 3 Winners from 10 People</strong>
+
+10 people compete. How many ways to choose 1st, 2nd, 3rd place?
+(Order matters! 1st place ≠ 2nd place)
+
+P(10, 3) = 10! / (10-3)!
+         = 10! / 7!
+         = (10 × 9 × 8 × 7!) / 7!
+         = 10 × 9 × 8
+         = 720
+
+<strong>Answer:</strong> 720 different ways to award top 3 positions
+            </div>
+            
+            <div class="calculation">
+<strong>Example 3: Password Creation</strong>
+
+Create a 4-digit PIN using digits 1-9 (no repetition)
+
+P(9, 4) = 9! / (9-4)!
+        = 9! / 5!
+        = (9 × 8 × 7 × 6 × 5!) / 5!
+        = 9 × 8 × 7 × 6
+        = 3024
+
+<strong>Answer:</strong> 3024 possible 4-digit PINs
+            </div>
+            
+            <div class="calculation">
+<strong>Example 4: Arranging Books on Shelf</strong>
+
+How many ways can you arrange 5 different books?
+
+P(5, 5) = 5!
+        = 5 × 4 × 3 × 2 × 1
+        = 120
+
+<strong>Answer:</strong> 120 different arrangements
+            </div>
+        </div>
+        
+        <div class="industry-box">
+            <h4>🏢 Industry Applications of Permutations</h4>
+            
+            <div class="calculation">
+<strong>Application 1: Task Scheduling</strong>
+
+A data scientist has 6 tasks to complete today.
+In how many orders can these tasks be done?
+
+P(6, 6) = 6!
+        = 6 × 5 × 4 × 3 × 2 × 1
+        = 720
+
+<strong>Use case:</strong> Finding optimal task order for productivity
+            </div>
+            
+            <div class="calculation">
+<strong>Application 2: A/B Testing Sequence</strong>
+
+Testing 4 different website layouts.
+How many ways to test them in sequence?
+
+P(4, 4) = 4!
+        = 24
+
+<strong>Use case:</strong> Planning test deployment order
+            </div>
+            
+            <div class="calculation">
+<strong>Application 3: Recommendation Ranking</strong>
+
+Show top 5 products from 20 available products.
+Order matters (position affects click rate).
+
+P(20, 5) = 20! / 15!
+         = 20 × 19 × 18 × 17 × 16
+         = 1,860,480
+
+<strong>Use case:</strong> Product recommendation algorithms
+Over 1.8 million possible rankings!
+            </div>
+        </div>
+        
+        <h2>5. Combinations</h2>
+        
+        <div class="definition-box">
+            <h3>📌 What is a Combination?</h3>
+            <p><strong>Combination:</strong> A selection where ORDER DOESN'T MATTER.</p>
+            <p><strong>Think:</strong> "How many ways can I choose items, regardless of order?"</p>
+            
+            <div class="formula">
+                C(n, r) = n! / (r! × (n - r)!)
+            </div>
+            <p>Also written as: ⁿCᵣ or (n choose r)</p>
+        </div>
+        
+        <div class="visual-box">
+            <h4>🎯 Permutation vs Combination</h4>
+            <table>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Permutation</th>
+                    <th>Combination</th>
+                </tr>
+                <tr>
+                    <td><strong>Order</strong></td>
+                    <td>Matters</td>
+                    <td>Doesn't matter</td>
+                </tr>
+                <tr>
+                    <td><strong>Example</strong></td>
+                    <td>ABC ≠ BAC (different)</td>
+                    <td>ABC = BAC (same)</td>
+                </tr>
+                <tr>
+                    <td><strong>Formula</strong></td>
+                    <td>n! / (n-r)!</td>
+                    <td>n! / (r! × (n-r)!)</td>
+                </tr>
+                <tr>
+                    <td><strong>Use Case</strong></td>
+                    <td>Rankings, passwords</td>
+                    <td>Teams, groups, selections</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="example-box">
+            <h4>📝 Manual Examples</h4>
+            
+            <div class="calculation">
+<strong>Example 1: Choosing 2 from 4 People (A, B, C, D)</strong>
+
+How many ways to choose 2 people for a team?
+(Order doesn't matter: choosing A,B = choosing B,A)
+
+C(4, 2) = 4! / (2! × 2!)
+        = (4 × 3 × 2 × 1) / (2 × 1 × 2 × 1)
+        = 24 / 4
+        = 6
+
+<strong>All combinations:</strong>
+AB, AC, AD, BC, BD, CD
+
+<strong>Answer:</strong> 6 ways
+            </div>
+            
+            <div class="calculation">
+<strong>Example 2: Pizza Toppings</strong>
+
+Pizza shop has 8 toppings. You can choose 3.
+How many different pizzas can you make?
+
+C(8, 3) = 8! / (3! × 5!)
+        = (8 × 7 × 6 × 5!) / (3 × 2 × 1 × 5!)
+        = (8 × 7 × 6) / 6
+        = 336 / 6
+        = 56
+
+<strong>Answer:</strong> 56 different pizza combinations
+            </div>
+            
+            <div class="calculation">
+<strong>Example 3: Lottery</strong>
+
+Lottery: Choose 6 numbers from 1 to 49
+How many possible combinations?
+
+C(49, 6) = 49! / (6! × 43!)
+         = (49 × 48 × 47 × 46 × 45 × 44) / (6 × 5 × 4 × 3 × 2 × 1)
+         = 10,068,347,520 / 720
+         = 13,983,816
+
+<strong>Answer:</strong> Almost 14 million combinations!
+This is why winning lottery is so hard.
+            </div>
+            
+            <div class="calculation">
+<strong>Example 4: Committee Selection</strong>
+
+From 12 employees, select 4 for a committee.
+How many ways?
+
+C(12, 4) = 12! / (4! × 8!)
+         = (12 × 11 × 10 × 9) / (4 × 3 × 2 × 1)
+         = 11,880 / 24
+         = 495
+
+<strong>Answer:</strong> 495 different committees possible
+            </div>
+        </div>
+        
+        <div class="industry-box">
+            <h3>🤖 Data Science Applications</h3>
+            
+            <div class="calculation">
+<strong>Application 1: Feature Selection</strong>
+
+Dataset has 20 features. Want to test models with 5 features.
+How many different feature combinations to test?
+
+C(20, 5) = 20! / (5! × 15!)
+         = (20 × 19 × 18 × 17 × 16) / (5 × 4 × 3 × 2 × 1)
+         = 1,860,480 / 120
+         = 15,504
+
+<strong>Challenge:</strong> Too many combinations to test all!
+<strong>Solution:</strong> Use feature selection algorithms (automated)
+            </div>
+            
+            <div class="calculation">
+<strong>Application 2: Hyperparameter Grid Search</strong>
+
+Tuning a model with:
+- 5 learning rates
+- 4 batch sizes
+- 3 optimizer types
+
+Choose 2 hyperparameters to optimize:
+
+From 3 types, choose 2:
+C(3, 2) = 3! / (2! × 1!)
+        = 3
+
+Combinations:
+1. Learning rate + Batch size
+2. Learning rate + Optimizer
+3. Batch size + Optimizer
+
+<strong>Use case:</strong> Prioritize which hyperparameters to tune first
+            </div>
+            
+            <div class="calculation">
+<strong>Application 3: A/B Testing Groups</strong>
+
+Have 10 different ad variations.
+Want to test 3 at a time to compare.
+How many test groups?
+
+C(10, 3) = 10! / (3! × 7!)
+         = (10 × 9 × 8) / (3 × 2 × 1)
+         = 720 / 6
+         = 120
+
+<strong>Business decision:</strong> 120 different test combinations
+Need to prioritize which tests to run first!
+            </div>
+            
+            <div class="calculation">
+<strong>Application 4: Market Basket Analysis</strong>
+
+Store has 100 products. Looking for pairs that are bought together.
+How many product pairs to analyze?
+
+C(100, 2) = 100! / (2! × 98!)
+          = (100 × 99) / 2
+          = 9,900 / 2
+          = 4,950
+
+<strong>Use case:</strong> Association rule mining (like Amazon's "frequently bought together")
+Analyze 4,950 product pairs to find patterns
+            </div>
+        </div>
+        
+        <h2>6. Practical Decision Guide</h2>
+        
+        <div class="important">
+            <h3>🤔 When to Use What?</h3>
+            
+            <table>
+                <tr>
+                    <th>Question Contains</th>
+                    <th>Use</th>
+                    <th>Example</th>
+                </tr>
+                <tr>
+                    <td>"arrange", "order", "rank", "sequence"</td>
+                    <td><strong>Permutation</strong></td>
+                    <td>Arrange 5 books on shelf</td>
+                </tr>
+                <tr>
+                    <td>"choose", "select", "pick", "group"</td>
+                    <td><strong>Combination</strong></td>
+                    <td>Choose 3 people for team</td>
+                </tr>
+                <tr>
+                    <td>"1st, 2nd, 3rd" (positions)</td>
+                    <td><strong>Permutation</strong></td>
+                    <td>Top 3 winners</td>
+                </tr>
+                <tr>
+                    <td>"committee", "team", "group"</td>
+                    <td><strong>Combination</strong></td>
+                    <td>Form a committee of 5</td>
+                </tr>
+            </table>
+        </div>
+        
+        <h2>7. Complete Real-World Example</h2>
+        
+        <div class="industry-box">
+            <h3>🏢 Netflix Recommendation System (Simplified)</h3>
+            
+            <div class="calculation">
+<strong>Scenario:</strong> Netflix wants to recommend movies to users
+
+<strong>Step 1: Probability of User Watching a Movie</strong>
+
+Historical data:
+- User watched 50 action movies out of 200 total movies watched
+- P(Watch Action) = 50/200 = 0.25 = 25%
+
+<strong>Step 2: Conditional Probability</strong>
+
+Among users who watched "Avengers":
+- 80 out of 100 also watched "Iron Man"
+- P(Watch Iron Man | Watched Avengers) = 80/100 = 0.80 = 80%
+
+<strong>Recommendation logic:</strong>
+If user watched Avengers → 80% chance they'll like Iron Man
+→ Recommend Iron Man!
+
+<strong>Step 3: Combinations for Testing</strong>
+
+Testing 5 different recommendation algorithms.
+Want to A/B test 2 at a time.
+
+C(5, 2) = 5! / (2! × 3!)
+        = (5 × 4) / 2
+        = 10
+
+Need 10 different A/B tests
+
+<strong>Step 4: Permutations for Ranking</strong>
+
+Show top 3 movies from 10 trending movies.
+Order matters (position 1 gets most views).
+
+P(10, 3) = 10! / 7!
+         = 10 × 9 × 8
+         = 720
+
+720 different ways to rank top 3 movies
+
+<strong>Step 5: Multiplication Rule for Success</strong>
+
+User journey:
+- P(See recommendation) = 1.0 (always shown)
+- P(Click | See) = 0.15 (15% click rate)
+- P(Watch | Click) = 0.60 (60% watch after clicking)
+
+P(Full conversion) = 1.0 × 0.15 × 0.60
+                   = 0.09 = 9%
+
+<strong>Business metric:</strong> 9% of recommendations lead to actual viewing
+            </div>
+        </div>
+        
+        <h2>8. Summary Cheat Sheet</h2>
+        
+        <div class="note">
+            <h3>📋 Quick Reference</h3>
+            
+            <h4>Probability Rules</h4>
+            <table>
+                <tr>
+                    <th>Rule</th>
+                    <th>Formula</th>
+                    <th>When to Use</th>
+                </tr>
+                <tr>
+                    <td>Complement</td>
+                    <td>P(not A) = 1 - P(A)</td>
+                    <td>Find probability of opposite event</td>
+                </tr>
+                <tr>
+                    <td>Addition (OR)</td>
+                    <td>P(A or B) = P(A) + P(B) - P(A and B)</td>
+                    <td>At least one event happens</td>
+                </tr>
+                <tr>
+                    <td>Multiplication (AND)</td>
+                    <td>P(A and B) = P(A) × P(B|A)</td>
+                    <td>Both events happen</td>
+                </tr>
+                <tr>
+                    <td>Conditional</td>
+                    <td>P(A|B) = P(A and B) / P(B)</td>
+                    <td>Probability given another event</td>
+                </tr>
+            </table>
+            
+            <h4>Counting Methods</h4>
+            <table>
+                <tr>
+                    <th>Method</th>
+                    <th>Formula</th>
+                    <th>Order Matters?</th>
+                    <th>Example</th>
+                </tr>
+                <tr>
+                    <td><strong>Permutation</strong></td>
+                    <td>P(n,r) = n!/(n-r)!</td>
+                    <td>YES</td>
+                    <td>Password, ranking, sequence</td>
+                </tr>
+                <tr>
+                    <td><strong>Combination</strong></td>
+                    <td>C(n,r) = n!/(r!(n-r)!)</td>
+                    <td>NO</td>
+                    <td>Team, lottery, selection</td>
+                </tr>
+            </table>
+        </div>
+        
+        <h2>9. Practice Problems with Solutions</h2>
+        
+        <div class="example-box">
+            <h4>Problem 1: Email Spam Detection</h4>
+            
+            <div class="calculation">
+<strong>Given:</strong>
+- 1000 emails received
+- 300 are spam
+- Spam filter catches 270 spam emails
+- Filter incorrectly flags 70 legitimate emails as spam
+
+<strong>Questions:</strong>
+
+a) P(Email is spam)?
+Answer: 300/1000 = 0.3 = 30%
+
+b) P(Flagged as spam)?
+Total flagged = 270 + 70 = 340
+Answer: 340/1000 = 0.34 = 34%
+
+c) P(Actually spam | Flagged as spam)?
+P(Spam | Flagged) = 270/340 = 0.794 = 79.4%
+
+d) P(Filter is correct)?
+Correct = 270 (caught spam) + 630 (didn't flag legitimate)
+Answer: 900/1000 = 0.9 = 90%
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <h4>Problem 2: Team Formation</h4>
+            
+            <div class="calculation">
+<strong>Given:</strong>
+- 8 data scientists available
+- Need to form a team of 3
+- Then assign roles: Team Lead, Developer, Analyst
+
+<strong>Step 1: Choose 3 people (order doesn't matter)</strong>
+C(8, 3) = 8! / (3! × 5!)
+        = (8 × 7 × 6) / 6
+        = 56 ways
+
+<strong>Step 2: Assign roles to chosen 3 (order matters now)</strong>
+P(3, 3) = 3!
+        = 6 ways
+
+<strong>Total:</strong> 56 × 6 = 336 different team configurations
+            </div>
+        </div>
+        
+        <div class="example-box">
+            <h4>Problem 3: Product Launch Success</h4>
+            
+            <div class="calculation">
+<strong>Given:</strong>
+Product launch requires:
+- Marketing campaign success: 70% probability
+- Technical readiness: 80% probability
+- Market conditions favorable: 60% probability
+
+All three must succeed for successful launch.
+
+<strong>Question:</strong> What's probability of successful launch?
+
+Assuming independence:
+P(Success) = P(Marketing) × P(Technical) × P(Market)
+           = 0.7 × 0.8 × 0.6
+           = 0.336 = 33.6%
+
+<strong>Answer:</strong> 33.6% chance of successful launch
+            </div>
+        </div>
+        
+        <h2>10. Key Takeaways for Data Science</h2>
+        
+        <div class="important">
+            <h3>🎯 Essential Points</h3>
+            
+            <ol>
+                <li><strong>Probability is everywhere in ML:</strong>
+                    <ul>
+                        <li>Classification: P(Class | Features)</li>
+                        <li>Recommendations: P(User likes Item)</li>
+                        <li>Prediction: P(Outcome | Input)</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Understanding probability rules helps:</strong>
+                    <ul>
+                        <li>Evaluate model performance</li>
+                        <li>Make business decisions</li>
+                        <li>Quantify uncertainty</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Permutations and combinations:</strong>
+                    <ul>
+                        <li>Feature selection strategies</li>
+                        <li>Hyperparameter tuning</li>
+                        <li>A/B testing design</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Conditional probability is crucial:</strong>
+                    <ul>
+                        <li>Naive Bayes classifier</li>
+                        <li>Medical diagnosis</li>
+                        <li>Fraud detection</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Real applications:</strong>
+                    <ul>
+                        <li>Spam filters use conditional probability</li>
+                        <li>Recommendation systems use combinations</li>
+                        <li>Neural networks output probabilities</li>
+                        <li>A/B testing uses hypothesis testing (based on probability)</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; padding: 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px;">
+            <h3 style="color: white; margin-bottom: 15px;">🎲 Remember</h3>
+            <p style="font-size: 1.15em; line-height: 1.8;">
+                <strong>Probability is the Foundation of Data Science!</strong><br><br>
+                Every ML model deals with uncertainty.<br>
+                Understanding probability helps you make better predictions.<br>
+                From spam detection to product recommendations - it's all probability!<br><br>
+                <em>Master probability, understand the world of uncertainty!</em>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

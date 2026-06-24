@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linear Algebra - Simple Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f7ff;
+    --white: #ffffff;
+    --blue-light: #e8f0fe;
+    --blue: #4285f4;
+    --blue-dark: #1a56db;
+    --green-light: #e6f9f0;
+    --green: #0ea66a;
+    --purple-light: #f0ebff;
+    --purple: #7c3aed;
+    --orange-light: #fff4e6;
+    --orange: #f97316;
+    --pink-light: #fde8f5;
+    --pink: #d946a8;
+    --gray: #64748b;
+    --text: #1e293b;
+    --text2: #475569;
+    --border: #e2e8f0;
+    --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    --shadow-hover: 0 6px 24px rgba(0,0,0,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 70px 40px 60px;
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 5px 18px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(32px, 6vw, 64px);
+    font-weight: 800;
+    margin-bottom: 14px;
+    line-height: 1.1;
+  }
+
+  .hero p {
+    font-size: 17px;
+    opacity: 0.85;
+    max-width: 520px;
+    margin: 0 auto 30px;
+  }
+
+  .hero-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .hero-topic {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 2px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    height: 54px;
+    gap: 4px;
+    overflow-x: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .nav::-webkit-scrollbar { height: 0; }
+
+  .nav a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .nav a:hover {
+    color: var(--blue-dark);
+    background: var(--blue-light);
+  }
+
+  /* CONTAINER */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* SECTION */
+  section {
+    padding: 60px 0;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .sec-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+
+  .sec-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 800;
+    flex-shrink: 0;
+    color: white;
+  }
+
+  .sec-info h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .sec-info p {
+    font-size: 14px;
+    color: var(--gray);
+    font-weight: 600;
+  }
+
+  /* CARDS GRID */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 24px 0; }
+
+  .card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .card h3 {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  /* DEFINITION BOX */
+  .def-box {
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin: 20px 0;
+    border-left: 5px solid;
+  }
+
+  .def-box.blue { background: var(--blue-light); border-color: var(--blue); }
+  .def-box.green { background: var(--green-light); border-color: var(--green); }
+  .def-box.purple { background: var(--purple-light); border-color: var(--purple); }
+  .def-box.orange { background: var(--orange-light); border-color: var(--orange); }
+  .def-box.pink { background: var(--pink-light); border-color: var(--pink); }
+
+  .def-box h4 {
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .def-box.blue h4 { color: var(--blue-dark); }
+  .def-box.green h4 { color: var(--green); }
+  .def-box.purple h4 { color: var(--purple); }
+  .def-box.orange h4 { color: var(--orange); }
+  .def-box.pink h4 { color: var(--pink); }
+
+  .def-box p { font-size: 14px; color: var(--text2); }
+
+  /* MATRIX DISPLAY */
+  .matrix-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+
+  .matrix {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    padding: 10px 16px;
+  }
+
+  .matrix::before, .matrix::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 3px;
+    border: 3px solid var(--text);
+    border-radius: 2px;
+  }
+
+  .matrix::before { left: 0; border-right: none; }
+  .matrix::after { right: 0; border-left: none; }
+
+  .matrix-row {
+    display: flex;
+    gap: 16px;
+  }
+
+  .matrix-cell {
+    width: 34px;
+    height: 34px;
+    background: var(--blue-light);
+    border: 2px solid #c7d9fc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue-dark);
+  }
+
+  .matrix-cell.green { background: var(--green-light); border-color: #a7e9c8; color: var(--green); }
+  .matrix-cell.purple { background: var(--purple-light); border-color: #c4aff8; color: var(--purple); }
+  .matrix-cell.orange { background: var(--orange-light); border-color: #fed7aa; color: var(--orange); }
+  .matrix-cell.highlight { background: #fef3c7; border-color: #fcd34d; color: #92400e; }
+
+  .op-sign {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--gray);
+  }
+
+  .mat-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--gray);
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+
+  .code-header {
+    background: #0f172a;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff5f56; }
+  .dot.y { background: #ffbd2e; }
+  .dot.g { background: #27c93f; }
+
+  .code-header span { font-size: 12px; color: #94a3b8; font-family: 'JetBrains Mono', monospace; margin-left: 6px; }
+
+  .code-block pre {
+    padding: 18px 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #e2e8f0;
+    overflow-x: auto;
+  }
+
+  .kw { color: #a78bfa; font-weight: 700; }
+  .cm { color: #64748b; }
+  .st { color: #86efac; }
+  .nm { color: #fb923c; }
+  .fn { color: #60a5fa; }
+  .out { color: #4ade80; }
+  .var { color: #f9a8d4; }
+
+  /* FORMULA */
+  .formula {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--blue-dark);
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+
+  /* STEP */
+  .step-wrap { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+
+  .step {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    box-shadow: var(--shadow);
+  }
+
+  .step-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-content h4 { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .step-content p { font-size: 13px; color: var(--text2); }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: linear-gradient(135deg, #667eea15, #764ba215);
+    border: 2px solid #667eea40;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+
+  .highlight-box h4 { font-size: 15px; font-weight: 800; color: #5b21b6; margin-bottom: 8px; }
+  .highlight-box p { font-size: 14px; color: var(--text2); }
+
+  /* TABLE */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .info-table th {
+    background: #667eea;
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .info-table td {
+    padding: 11px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+  }
+
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table tr:nth-child(even) td { background: var(--bg); }
+
+  code {
+    background: var(--blue-light);
+    color: var(--blue-dark);
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  /* APPLICATION CARDS */
+  .app-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 20px 0; }
+
+  .app-card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    border: 2px solid var(--border);
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+
+  .app-card .icon { font-size: 32px; margin-bottom: 10px; }
+  .app-card h4 { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+  .app-card p { font-size: 12px; color: var(--text2); }
+
+  .tag-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+
+  .tag-pill.blue { background: var(--blue-light); color: var(--blue-dark); }
+  .tag-pill.green { background: var(--green-light); color: var(--green); }
+  .tag-pill.purple { background: var(--purple-light); color: var(--purple); }
+  .tag-pill.orange { background: var(--orange-light); color: var(--orange); }
+
+  /* FOOTER */
+  footer {
+    background: #1e293b;
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 14px;
+    color: #94a3b8;
+  }
+
+  footer h3 { color: white; font-size: 18px; margin-bottom: 8px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .matrix-wrap { gap: 8px; }
+    .sec-head { flex-direction: column; align-items: flex-start; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">📐 Study Notes</div>
+  <h1>Linear Algebra<br>Simple Guide 🧮</h1>
+  <p>Scalar, Vector, Matrix, Tensor —  simple language mein, examples ke sath</p>
+  <div class="hero-topics">
+    <span class="hero-topic">Scalar</span>
+    <span class="hero-topic">Vector</span>
+    <span class="hero-topic">Matrix</span>
+    <span class="hero-topic">Tensor</span>
+    <span class="hero-topic">Transpose</span>
+    <span class="hero-topic">Dot Product</span>
+    <span class="hero-topic">Special Matrices</span>
+    <span class="hero-topic">Operations</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#basics">📦 Basics</a>
+  <a href="#scalar">1️⃣ Scalar</a>
+  <a href="#vector">↗️ Vector</a>
+  <a href="#matrix">🔢 Matrix</a>
+  <a href="#tensor">🧊 Tensor</a>
+  <a href="#operations">⚙️ Operations</a>
+  <a href="#transpose">🔄 Transpose</a>
+  <a href="#dot">• Dot Product</a>
+  <a href="#special">⭐ Special</a>
+  <a href="#applications">🚀 Applications</a>
+</nav>
+
+<!-- ==================== SECTION 1: BASICS OVERVIEW ==================== -->
+<section id="basics">
+<div class="container">
+  <div class="sec-head">
+    <div class="sec-num" style="background: linear-gradient(135deg,#667eea,#764ba2)">📦</div>
+    <div class="sec-info">
+      <h2>4 Building Blocks</h2>
+      <p>Linear Algebra ke 4 main objects — complexity badhti jaati hai</p>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">1️⃣</div>
+      <h3>Scalar</h3>
+      <p>Ek akela number. Koi direction nahi, sirf value. Example: <strong>5</strong>, <strong>-3.14</strong>, <strong>100</strong></p>
+    </div>
+    <div class="card">
+      <div class="card-icon">↗️</div>
+      <h3>Vector</h3>
+      <p>Numbers ki ek line (row ya column). Ek direction hoti hai. Example: <strong>[2, 5]</strong></p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔢</div>
+      <h3>Matrix</h3>
+      <p>Numbers ka ek grid (rows × columns). Example: 2×2 ka table jisme 4 numbers hain.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🧊</div>
+      <h3>Tensor</h3>
+      <p>3D ya zyada dimensions. Images, videos sab tensors hain. Think: cube of numbers.</p>
+    </div>
+  </div>
+
+  <table class="info-table">
+    <tr><th>Name</th><th>Shape Example</th><th>Real World Example</th><th>Dimensions</th></tr>
+    <tr><td><strong>Scalar</strong></td><td>( )</td><td>Temperature: 37°C</td><td>0-D</td></tr>
+    <tr><td><strong>Vector</strong></td><td>(2,) ya (2,1)</td><td>Speed [north, east] = [3, 4]</td><td>1-D</td></tr>
+    <tr><td><strong>Matrix</strong></td><td>(2, 2)</td><td>2×2 table of scores</td><td>2-D</td></tr>
+    <tr><td><strong>Tensor</strong></td><td>(2, 2, 3)</td><td>Color image: height × width × RGB</td><td>3-D+</td></tr>
+  </table>
+</div>
+</section>
+
+<!-- ==================== SECTION 2: SCALAR ==================== -->
+<section id="scalar">
+<div class="container">
+  <div class="sec-head">
+    <div class="sec-num" style="background: linear-gradient(135deg,#f97316,#ef4444)">1</div>
+    <div class="sec-info">
+      <h2>Scalar — Ek Akela Number</h2>
+      <p>Sirf magnitude, koi direction nahi</p>
+    </div>
+  </div>
+
+  <div class="def-box orange">
+    <h4>📌 Definition</h4>
+    <p>Scalar ek single real number hota hai. Koi dimension nahi hoti. Jaise temperature, price, age — ye sab scalars hain.</p>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>➕ Addition</h3>
+      <div class="formula">3 + 5 = 8</div>
+      <p style="font-size:13px; color:var(--text2)">Normal number addition. Koi special rule nahi.</p>
+    </div>
+    <div class="card">
+      <h3>✖️ Multiplication</h3>
+      <div class="formula">4 × 3 = 12</div>
+      <p style="font-size:13px; color:var(--text2)">Normal multiply. Scalar se vector/matrix multiply karna = scaling.</p>
+    </div>
+    <div class="card">
+      <h3>🔢 Scalar × Vector</h3>
+      <div class="formula">2 × [3, 4] = [6, 8]</div>
+      <p style="font-size:13px; color:var(--text2)">Har element ko scalar se multiply karo — isko "scaling" kehte hain.</p>
+    </div>
+  </div>
+
+  <div class="def-box blue">
+    <h4>💡 Data Science mein Scalar ka use:</h4>
+    <p><strong>Learning Rate</strong> (0.01), <strong>Loss value</strong> (0.35), <strong>Accuracy</strong> (0.95) — ye sab scalars hain!</p>
+  </div>
+</div>
+</section>
+
+<!-- ==================== SECTION 3: VECTOR ==================== -->
+<section id="vector">
+<div class="container">
+  <div class="sec-head">
+    <div class="sec-num" style="background: linear-gradient(135deg,#0ea66a,#06b6d4)">2</div>
+    <div class="sec-info">
+      <h2>Vector — Numbers ki Line</h2>
+      <p>Direction aur magnitude dono hoti hai</p>
+    </div>
+  </div>
+
+  <div class="def-box green">
+    <h4>📌 Definition</h4>
+    <p>Vector numbers ki ek ordered list hai. Iska ek direction hota hai. 2D vector = [x, y] — jaise map par ek point.</p>
+  </div>
+
+  <div style="margin: 24px 0;">
+    <h3 style="font-size:16px; font-weight:800; margin-bottom:14px;">Example — 2D Vectors:</h3>
+    <div class="matrix-wrap">
+      <div>
+        <div class="matrix">
+          <div class="matrix-row"><div class="matrix-cell green">2</div></div>
+          <div class="matrix-row"><div class="matrix-cell green">5</div></div>
+        </div>
+        <div class="mat-label">Column Vector a</div>
+      </div>
+      <div class="op-sign">+</div>
+      <div>
+        <div class="matrix">
+          <div class="matrix-row"><div class="matrix-cell purple">1</div></div>
+          <div class="matrix-row"><div class="matrix-cell purple">3</div></div>
+        </div>
+        <div class="mat-label">Column Vector b</div>
+      </div>
+      <div class="op-sign">=</div>
+      <div>
+        <div class="matrix">
+          <div class="matrix-row"><div class="matrix-cell orange">3</div></div>
+          <div class="matrix-row"><div class="matrix-cell orange">8</div></div>
+        </div>
+        <div class="mat-label">Result a + b</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>➕ Vector Addition</h3>
+      <p style="font-size:13px;">[2,5] + [1,3] = [<strong>3,8</strong>]</p>
+      <p style="font-size:12px; color:var(--text2); margin-top:6px;">Same position ke numbers add karo. Shape same rehna chahiye.</p>
+    </div>
+    <div class="card">
+      <h3>✖️ Scalar Multiply</h3>
+      <p style="font-size:13px;">3 × [2,5] = [<strong>6,15</strong>]</p>
+      <p style="font-size:12px; color:var(--text2); margin-top:6px;">Har element ko scalar se multiply karo — vector bada/chota hota hai.</p>
+    </div>
+    <div class="card">
+      <h3>📏 Magnitude (Length)</h3>
+      <p style="font-size:13px;">‖[3,4]‖ = √(9+16) = <strong>5</strong></p>
+      <p style="font-size:12px; color:var(--text2); margin-top:6px;">Vector ki length = Pythagoras theorem!</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>Python — Vector Operations</span></div>
+    <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="cm"># 2D Vectors banao</span>
+<span class="var">a</span> = np.<span class="fn">array</span>([<span class="nm">2</span>, <span class="nm">5</span>])
+<span class="var">b</span> = np.<span class="fn">array</span>([<span class="nm">1</span>, <span class="nm">3</span>])
+
+<span class="cm"># Addition</span>
+<span class="fn">print</span>(a + b)        <span class="out"># [3, 8]</span>
+
+<span class="cm"># Scalar multiply</span>
+<span class="fn">print</span>(<span class="nm">3</span> * a)         <span class="out"># [6, 15]</span>
+
+<span class="cm"># Magnitude (length)</span>
+<span class="fn">print</span>(np.linalg.<span class="fn">norm</span>(a))  <span class="out"># 5.385</span></pre>
+  </div>
+</div>
+</section>
+
+<!-- ==================== SECTION 4: MATRIX ==================== -->
+<section id="matrix">
+<div class="container">
+  <div class="sec-head">
+    <div class="sec-num" style="background: linear-gradient(135deg,#4285f4,#7c3aed)">3</div>
+    <div class="sec-info">
+      <h2>Matrix — Numbers ka Grid</h2>
+      <p>Rows aur columns ka table — 2×2 example ke sath</p>
+    </div>
+  </div>
+
+  <div class="def-box blue">
+    <h4>📌 Definition</h4>
+    <p>Matrix ek 2D grid hai — rows × columns. Ek 2×2 matrix mein 2 rows aur 2 columns hote hain = total 4 numbers.</p>
+  </div>
+
+  <h3 style="font-size:16px; font-weight:800; margin: 24px 0 14px;">Matrix Addition (2×2):</h3>
+  <div class="matrix-wrap">
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell">1</div><div class="matrix-cell">2</div></div>
+        <div class="matrix-row"><div class="matrix-cell">3</div><div class="matrix-cell">4</div></div>
+      </div>
+      <div class="mat-label">Matrix A</div>
+    </div>
+    <div class="op-sign">+</div>
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell green">5</div><div class="matrix-cell green">6</div></div>
+        <div class="matrix-row"><div class="matrix-cell green">7</div><div class="matrix-cell green">8</div></div>
+      </div>
+      <div class="mat-label">Matrix B</div>
+    </div>
+    <div class="op-sign">=</div>
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell orange">6</div><div class="matrix-cell orange">8</div></div>
+        <div class="matrix-row"><div class="matrix-cell orange">10</div><div class="matrix-cell orange">12</div></div>
+      </div>
+      <div class="mat-label">A + B</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:16px; font-weight:800; margin: 28px 0 14px;">Matrix Multiplication (2×2 × 2×2):</h3>
+
+  <div class="highlight-box">
+    <h4>🎯 Rule: Row × Column</h4>
+    <p>Result ka element (i,j) = Row i of A ka Column j of B ke sath dot product.</p>
+  </div>
+
+  <div class="matrix-wrap" style="margin-top:16px;">
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell">1</div><div class="matrix-cell">2</div></div>
+        <div class="matrix-row"><div class="matrix-cell">3</div><div class="matrix-cell">4</div></div>
+      </div>
+      <div class="mat-label">A</div>
+    </div>
+    <div class="op-sign">×</div>
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell green">2</div><div class="matrix-cell green">0</div></div>
+        <div class="matrix-row"><div class="matrix-cell green">1</div><div class="matrix-cell green">3</div></div>
+      </div>
+      <div class="mat-label">B</div>
+    </div>
+    <div class="op-sign">=</div>
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell orange">4</div><div class="matrix-cell orange">6</div></div>
+        <div class="matrix-row"><div class="matrix-cell orange">10</div><div class="matrix-cell orange">12</div></div>
+      </div>
+      <div class="mat-label">A × B</div>
+    </div>
+  </div>
+
+  <div class="step-wrap" style="margin-top:16px;">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Result (0,0) = ?</h4>
+        <p>Row 0 of A = [1, 2] | Col 0 of B = [2, 1] → 1×2 + 2×1 = <strong>4</strong> ✓</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Result (0,1) = ?</h4>
+        <p>Row 0 of A = [1, 2] | Col 1 of B = [0, 3] → 1×0 + 2×3 = <strong>6</strong> ✓</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Result (1,0) = ?</h4>
+        <p>Row 1 of A = [3, 4] | Col 0 of B = [2, 1] → 3×2 + 4×1 = <strong>10</strong> ✓</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Result (1,1) = ?</h4>
+        <p>Row 1 of A = [3, 4] | Col 1 of B = [0, 3] → 3×0 + 4×3 = <strong>12</strong> ✓</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>Python — Matrix Operations</span></div>
+    <pre><span class="var">A</span> = np.<span class="fn">array</span>([[<span class="nm">1</span>,<span class="nm">2</span>],[<span class="nm">3</span>,<span class="nm">4</span>]])
+<span class="var">B</span> = np.<span class="fn">array</span>([[<span class="nm">2</span>,<span class="nm">0</span>],[<span class="nm">1</span>,<span class="nm">3</span>]])
+
+<span class="cm"># Addition</span>
+<span class="fn">print</span>(A + B)        <span class="out"># [[3,2],[4,7]]</span>
+
+<span class="cm"># Matrix Multiply</span>
+<span class="fn">print</span>(A @ B)        <span class="out"># [[4,6],[10,12]]</span>
+
+<span class="cm"># Element-wise multiply</span>
+<span class="fn">print</span>(A * B)        <span class="out"># [[2,0],[3,12]]</span></pre>
+  </div>
+</div>
+</section>
+
+<!-- ==================== SECTION 5: TENSOR ==================== -->
+<section id="tensor">
+<div class="container">
+  <div class="sec-head">
+    <div class="sec-num" style="background: linear-gradient(135deg,#d946a8,#f97316)">4</div>
+    <div class="sec-info">
+      <h2>Tensor — Multi-Dimensional Array</h2>
+      <p>Matrix ka 3D ya zyada dimensions wala version</p>
+    </div>
+  </div>
+
+  <div class="def-box pink">
+    <h4>📌 Definition</h4>
+    <p>Tensor ek generalized term hai — Scalar 0-D tensor hai, Vector 1-D, Matrix 2-D, aur 3D+ ko hum Tensor kehte hain. Deep Learning mein sab kuch tensors hain!</p>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🖼️</div>
+      <h3>Image Tensor</h3>
+      <p>Ek color image = <strong>Height × Width × 3</strong></p>
+      <p style="font-size:12px; color:var(--text2); margin-top:6px;">Example: 28×28 image with RGB = shape (28, 28, 3)</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📦</div>
+      <h3>Batch Tensor</h3>
+      <p>100 images ka batch = <strong>100 × H × W × 3</strong></p>
+      <p style="font-size:12px; color:var(--text2); margin-top:6px;">Neural network ek baar mein 100 images process karta hai</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎬</div>
+      <h3>Video Tensor</h3>
+      <p>Video = <strong>Frames × H × W × 3</strong></p>
+      <p style="font-size:12px; color:var(--text2); margin-top:6px;">30fps video = 4D tensor with time dimension</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>Python — Tensor Examples</span></div>
+    <pre><span class="cm"># Scalar (0-D Tensor)</span>
+<span class="var">s</span> = np.<span class="fn">array</span>(<span class="nm">5</span>)
+<span class="fn">print</span>(s.shape)       <span class="out"># () — koi dimension nahi</span>
+
+<span class="cm"># Vector (1-D Tensor)</span>
+<span class="var">v</span> = np.<span class="fn">array</span>([<span class="nm">2</span>, <span class="nm">5</span>])
+<span class="fn">print</span>(v.shape)       <span class="out"># (2,)</span>
+
+<span class="cm"># Matrix (2-D Tensor)</span>
+<span class="var">m</span> = np.<span class="fn">array</span>([[<span class="nm">1</span>,<span class="nm">2</span>],[<span class="nm">3</span>,<span class="nm">4</span>]])
+<span class="fn">print</span>(m.shape)       <span class="out"># (2, 2)</span>
+
+<span class="cm"># 3-D Tensor (jaise 2 images of 2x2 pixels)</span>
+<span class="var">t</span> = np.<span class="fn">zeros</span>((<span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>))  <span class="cm"># 2x2 image, 3 channels (RGB)</span>
+<span class="fn">print</span>(t.shape)       <span class="out"># (2, 2, 3)</span></pre>
+  </div>
+</div>
+</section>
+
+<!-- ==================== SECTION 6: OPERATIONS ==================== -->
+<section id="operations">
+<div class="container">
+  <div class="sec-head">
+    <div class="sec-num" style="background: linear-gradient(135deg,#f59e0b,#ef4444)">⚙️</div>
+    <div class="sec-info">
+      <h2>Basic Operations</h2>
+      <p>Addition, Subtraction, Scalar Multiply — har object par</p>
+    </div>
+  </div>
+
+  <table class="info-table">
+    <tr><th>Operation</th><th>Scalar</th><th>Vector [2,5]</th><th>Matrix [[1,2],[3,4]]</th></tr>
+    <tr>
+      <td><strong>Add same type</strong></td>
+      <td>3 + 4 = 7</td>
+      <td>[2,5]+[1,3]=[3,8]</td>
+      <td>Har element add karo</td>
+    </tr>
+    <tr>
+      <td><strong>Multiply by Scalar 2</strong></td>
+      <td>5 × 2 = 10</td>
+      <td>2×[2,5]=[4,10]</td>
+      <td>Har element × 2</td>
+    </tr>
+    <tr>
+      <td><strong>NumPy Code</strong></td>
+      <td><code>a * b</code></td>
+      <td><code>v1 + v2</code></td>
+      <td><code>A @ B</code> (multiply)</td>
+    </tr>
+  </table>
+
+  <div class="def-box orange">
+    <h4>⚠️ Important Rules</h4>
+    <p>• Vector add karne ke liye dono ka same shape hona chahiye.<br>
+    • Matrix multiply: A(m×n) × B(n×p) = C(m×p) — inner dimensions match karna zaroori!<br>
+    • A×B ≠ B×A matrix multiplication mein (non-commutative).</p>
+  </div>
+</div>
+</section>
+
+<!-- ==================== SECTION 7: TRANSPOSE ==================== -->
+<section id="transpose">
+<div class="container">
+  <div class="sec-head">
+    <div class="sec-num" style="background: linear-gradient(135deg,#06b6d4,#0ea66a)">🔄</div>
+    <div class="sec-info">
+      <h2>Transpose — Rows aur Columns Palat do</h2>
+      <p>Aᵀ: matrix ko rotate karo 90° rotate karo</p>
+    </div>
+  </div>
+
+  <div class="def-box green">
+    <h4>📌 Definition</h4>
+    <p>Transpose mein rows aur columns swap ho jaate hain. Agar A ka element (i, j) hai, toh Aᵀ mein woh (j, i) par aayega. 2×2 matrix ka transpose bhi 2×2 hota hai.</p>
+  </div>
+
+  <h3 style="font-size:16px; font-weight:800; margin: 24px 0 16px;">2×2 Matrix Transpose:</h3>
+  <div class="matrix-wrap">
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell">1</div><div class="matrix-cell">2</div></div>
+        <div class="matrix-row"><div class="matrix-cell">3</div><div class="matrix-cell">4</div></div>
+      </div>
+      <div class="mat-label">A (original)</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+      <div class="op-sign">→</div>
+      <div style="font-size:12px; font-weight:700; color:var(--gray);">Transpose (  ᵀ )</div>
+    </div>
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell green">1</div><div class="matrix-cell green">3</div></div>
+        <div class="matrix-row"><div class="matrix-cell green">2</div><div class="matrix-cell green">4</div></div>
+      </div>
+      <div class="mat-label">Aᵀ (transposed)</div>
+    </div>
+  </div>
+
+  <div style="margin: 20px 0;">
+    <div class="step-wrap">
+      <div class="step">
+        <div class="step-num" style="background:var(--green)">💡</div>
+        <div class="step-content">
+          <h4>Kya hua?</h4>
+          <p>Row 1 [1, 2] → Column 1 ban gayi. Row 2 [3, 4] → Column 2 ban gayi. Diagonal elements (1 aur 4) wahi rahe!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-size:16px; font-weight:800; margin: 24px 0 14px;">Vector Transpose:</h3>
+  <div class="matrix-wrap">
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell">2</div></div>
+        <div class="matrix-row"><div class="matrix-cell">5</div></div>
+      </div>
+      <div class="mat-label">Column Vector</div>
+    </div>
+    <div class="op-sign">→ᵀ</div>
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell green">2</div><div class="matrix-cell green">5</div></div>
+      </div>
+      <div class="mat-label">Row Vector (transposed)</div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>📐 Transpose Properties</h3>
+      <p style="font-size:13px;">• (Aᵀ)ᵀ = A (do baar transpose = wapas same)<br>
+      • (A+B)ᵀ = Aᵀ + Bᵀ<br>
+      • (AB)ᵀ = BᵀAᵀ (order palat jaata hai!)</p>
+    </div>
+    <div class="card">
+      <h3>🔍 Symmetric Matrix</h3>
+      <p style="font-size:13px;">Agar A = Aᵀ hao toh matrix symmetric hai.<br>Example: [[1,2],[2,4]] — diagonal ke sath mirror image.</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>Python — Transpose</span></div>
+    <pre><span class="var">A</span> = np.<span class="fn">array</span>([[<span class="nm">1</span>,<span class="nm">2</span>],[<span class="nm">3</span>,<span class="nm">4</span>]])
+
+<span class="cm"># Transpose karo</span>
+<span class="fn">print</span>(A.T)
+<span class="out"># [[1, 3],
+#  [2, 4]]</span>
+
+<span class="cm"># Double transpose = original</span>
+<span class="fn">print</span>((A.T).T)     <span class="out"># [[1,2],[3,4]] — wapas same!</span>
+
+<span class="cm"># Column vector ko row mein convert</span>
+<span class="var">v</span> = np.<span class="fn">array</span>([[<span class="nm">2</span>],[<span class="nm">5</span>]])  <span class="cm"># shape (2,1)</span>
+<span class="fn">print</span>(v.T)             <span class="out"># [[2, 5]]  — shape (1,2)</span></pre>
+  </div>
+</div>
+</section>
+
+<!-- ==================== SECTION 8: DOT PRODUCT ==================== -->
+<section id="dot">
+<div class="container">
+  <div class="sec-head">
+    <div class="sec-num" style="background: linear-gradient(135deg,#7c3aed,#4285f4)">•</div>
+    <div class="sec-info">
+      <h2>Dot Product — Vectors ka "Conversation"</h2>
+      <p>Do vectors kitna similar direction mein point karte hain</p>
+    </div>
+  </div>
+
+  <div class="def-box purple">
+    <h4>📌 Definition</h4>
+    <p>Dot product mein ek hi position ke numbers multiply karke sab add karte hain. Result ek scalar hota hai. a·b = a₁b₁ + a₂b₂</p>
+  </div>
+
+  <h3 style="font-size:16px; font-weight:800; margin: 24px 0 14px;">Example — [1, 2] · [3, 4]:</h3>
+  <div class="matrix-wrap">
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell">1</div><div class="matrix-cell">2</div></div>
+      </div>
+      <div class="mat-label">Vector a</div>
+    </div>
+    <div class="op-sign">·</div>
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell green">3</div><div class="matrix-cell green">4</div></div>
+      </div>
+      <div class="mat-label">Vector b</div>
+    </div>
+    <div class="op-sign">=</div>
+    <div style="display:flex;align-items:center;">
+      <div style="background:var(--orange-light);border:2px solid var(--orange);border-radius:12px;padding:12px 20px;font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800;color:var(--orange);">
+        11
+      </div>
+    </div>
+  </div>
+
+  <div class="step-wrap" style="margin-top:16px;">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Step 1: Position-wise Multiply</h4>
+        <p>1×3 = 3 aur 2×4 = 8</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Step 2: Sab Add karo</h4>
+        <p>3 + 8 = <strong>11</strong> ✓</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards" style="margin-top:24px;">
+    <div class="card">
+      <h3>📐 Geometric Meaning</h3>
+      <p style="font-size:13px;">a·b = |a| × |b| × cos(θ)<br>
+      • θ = 0°: same direction → max positive<br>
+      • θ = 90°: perpendicular → 0<br>
+      • θ = 180°: opposite → negative</p>
+    </div>
+    <div class="card">
+      <h3>🔍 Cosine Similarity</h3>
+      <p style="font-size:13px;">similarity = a·b / (|a| × |b|)<br><br>
+      ML mein text/image similarity check karne ke liye use hota hai!</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>Python — Dot Product</span></div>
+    <pre><span class="var">a</span> = np.<span class="fn">array</span>([<span class="nm">1</span>, <span class="nm">2</span>])
+<span class="var">b</span> = np.<span class="fn">array</span>([<span class="nm">3</span>, <span class="nm">4</span>])
+
+<span class="cm"># Method 1</span>
+<span class="fn">print</span>(np.<span class="fn">dot</span>(a, b))   <span class="out"># 11</span>
+
+<span class="cm"># Method 2 (same result)</span>
+<span class="fn">print</span>(a @ b)          <span class="out"># 11</span>
+
+<span class="cm"># Cosine Similarity</span>
+<span class="var">cos_sim</span> = np.<span class="fn">dot</span>(a,b) / (np.linalg.<span class="fn">norm</span>(a) * np.linalg.<span class="fn">norm</span>(b))
+<span class="fn">print</span>(cos_sim.round(<span class="nm">3</span>))  <span class="out"># 0.983 — almost same direction!</span></pre>
+  </div>
+</div>
+</section>
+
+<!-- ==================== SECTION 9: SPECIAL MATRICES ==================== -->
+<section id="special">
+<div class="container">
+  <div class="sec-head">
+    <div class="sec-num" style="background: linear-gradient(135deg,#f97316,#d946a8)">⭐</div>
+    <div class="sec-info">
+      <h2>Special Matrices</h2>
+      <p>Important matrices jo ML mein baar baar aati hain</p>
+    </div>
+  </div>
+
+  <!-- Identity Matrix -->
+  <h3 style="font-size:17px; font-weight:800; margin-bottom:14px; color:var(--blue-dark);">1. Identity Matrix (I) — "Number 1" of Matrices</h3>
+  <div class="def-box blue">
+    <h4>📌 Definition</h4>
+    <p>Diagonal par 1 aur baaki sab 0. Kisi bhi matrix ko identity se multiply karo — wahi matrix aata hai! A × I = A</p>
+  </div>
+  <div class="matrix-wrap">
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell highlight">1</div><div class="matrix-cell">0</div></div>
+        <div class="matrix-row"><div class="matrix-cell">0</div><div class="matrix-cell highlight">1</div></div>
+      </div>
+      <div class="mat-label">2×2 Identity (I₂)</div>
+    </div>
+  </div>
+
+  <!-- Zero Matrix -->
+  <h3 style="font-size:17px; font-weight:800; margin: 28px 0 14px; color:var(--green);">2. Zero Matrix — Sab Zero</h3>
+  <div class="def-box green">
+    <h4>📌 Definition</h4>
+    <p>Sab elements zero. Neural network weights initialize karne se pehle ya gradients reset ke liye use hoti hai.</p>
+  </div>
+  <div class="matrix-wrap">
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell green">0</div><div class="matrix-cell green">0</div></div>
+        <div class="matrix-row"><div class="matrix-cell green">0</div><div class="matrix-cell green">0</div></div>
+      </div>
+      <div class="mat-label">2×2 Zero Matrix</div>
+    </div>
+  </div>
+
+  <!-- Symmetric Matrix -->
+  <h3 style="font-size:17px; font-weight:800; margin: 28px 0 14px; color:var(--purple);">3. Symmetric Matrix — Mirror Image</h3>
+  <div class="def-box purple">
+    <h4>📌 Definition</h4>
+    <p>Jab A = Aᵀ (transpose same hai). Diagonal ke dono taraf mirror image. Covariance matrices hamesha symmetric hoti hain!</p>
+  </div>
+  <div class="matrix-wrap">
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell highlight">4</div><div class="matrix-cell purple">2</div></div>
+        <div class="matrix-row"><div class="matrix-cell purple">2</div><div class="matrix-cell highlight">3</div></div>
+      </div>
+      <div class="mat-label">Symmetric (A = Aᵀ)</div>
+    </div>
+  </div>
+
+  <!-- Diagonal Matrix -->
+  <h3 style="font-size:17px; font-weight:800; margin: 28px 0 14px; color:var(--orange);">4. Diagonal Matrix — Sirf Diagonal par Values</h3>
+  <div class="def-box orange">
+    <h4>📌 Definition</h4>
+    <p>Sirf diagonal par values, baaki sab zero. Scaling operations ke liye use hoti hai. Computationally fast!</p>
+  </div>
+  <div class="matrix-wrap">
+    <div>
+      <div class="matrix">
+        <div class="matrix-row"><div class="matrix-cell highlight">5</div><div class="matrix-cell orange">0</div></div>
+        <div class="matrix-row"><div class="matrix-cell orange">0</div><div class="matrix-cell highlight">3</div></div>
+      </div>
+      <div class="mat-label">Diagonal Matrix</div>
+    </div>
+  </div>
+
+  <div class="code-block" style="margin-top:24px;">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>Python — Special Matrices</span></div>
+    <pre><span class="cm"># Identity Matrix</span>
+<span class="var">I</span> = np.<span class="fn">eye</span>(<span class="nm">2</span>)
+<span class="fn">print</span>(I)         <span class="out"># [[1., 0.], [0., 1.]]</span>
+
+<span class="cm"># Zero Matrix</span>
+<span class="var">Z</span> = np.<span class="fn">zeros</span>((<span class="nm">2</span>,<span class="nm">2</span>))
+<span class="fn">print</span>(Z)         <span class="out"># [[0., 0.], [0., 0.]]</span>
+
+<span class="cm"># Diagonal Matrix</span>
+<span class="var">D</span> = np.<span class="fn">diag</span>([<span class="nm">5</span>, <span class="nm">3</span>])
+<span class="fn">print</span>(D)         <span class="out"># [[5, 0], [0, 3]]</span>
+
+<span class="cm"># Check Symmetric</span>
+<span class="var">A</span> = np.<span class="fn">array</span>([[<span class="nm">4</span>,<span class="nm">2</span>],[<span class="nm">2</span>,<span class="nm">3</span>]])
+<span class="fn">print</span>(np.<span class="fn">allclose</span>(A, A.T))  <span class="out"># True — symmetric hai!</span>
+
+<span class="cm"># Identity se multiply</span>
+<span class="var">M</span> = np.<span class="fn">array</span>([[<span class="nm">1</span>,<span class="nm">2</span>],[<span class="nm">3</span>,<span class="nm">4</span>]])
+<span class="fn">print</span>(M @ I)     <span class="out"># [[1,2],[3,4]] — same as M!</span></pre>
+  </div>
+</div>
+</section>
+
+<!-- ==================== SECTION 10: APPLICATIONS ==================== -->
+<section id="applications">
+<div class="container">
+  <div class="sec-head">
+    <div class="sec-num" style="background: linear-gradient(135deg,#667eea,#764ba2)">🚀</div>
+    <div class="sec-info">
+      <h2>Real-World Applications</h2>
+      <p>Ye concepts kahan use hote hain — Data Science aur AI mein</p>
+    </div>
+  </div>
+
+  <div class="app-grid">
+    <div class="app-card">
+      <div class="icon">🧠</div>
+      <h4>Neural Networks</h4>
+      <p>Har layer = Matrix multiply. Input × Weights = Output</p>
+      <span class="tag-pill blue">Matrix Multiply</span>
+    </div>
+    <div class="app-card">
+      <div class="icon">📈</div>
+      <h4>Linear Regression</h4>
+      <p>y = X × w — data matrix se predictions nikalna</p>
+      <span class="tag-pill green">Dot Product</span>
+    </div>
+    <div class="app-card">
+      <div class="icon">🔍</div>
+      <h4>Recommendation</h4>
+      <p>User aur item vectors ka dot product = similarity score</p>
+      <span class="tag-pill purple">Dot Product</span>
+    </div>
+    <div class="app-card">
+      <div class="icon">📝</div>
+      <h4>NLP / ChatGPT</h4>
+      <p>Word embeddings = vectors. Attention = matrix ops.</p>
+      <span class="tag-pill orange">Tensor</span>
+    </div>
+    <div class="app-card">
+      <div class="icon">🖼️</div>
+      <h4>Computer Vision</h4>
+      <p>Image = 3D tensor (H×W×C). CNN = matrix operations.</p>
+      <span class="tag-pill orange">Tensor</span>
+    </div>
+    <div class="app-card">
+      <div class="icon">📊</div>
+      <h4>PCA (Dimensionality)</h4>
+      <p>Covariance matrix (symmetric!) ka eigen decomposition.</p>
+      <span class="tag-pill blue">Special Matrix</span>
+    </div>
+    <div class="app-card">
+      <div class="icon">🎯</div>
+      <h4>Gradient Descent</h4>
+      <p>Gradient = vector. Update = scalar × vector subtraction.</p>
+      <span class="tag-pill green">Scalar + Vector</span>
+    </div>
+    <div class="app-card">
+      <div class="icon">🔁</div>
+      <h4>Backpropagation</h4>
+      <p>Transpose matrices use hoti hain gradients flow ke liye!</p>
+      <span class="tag-pill purple">Transpose</span>
+    </div>
+  </div>
+
+  <div style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 16px; padding: 28px; color: white; margin-top: 32px;">
+    <h3 style="font-size:18px; margin-bottom:12px;">🎓 Quick Revision Summary</h3>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:16px;">
+      <div style="background:rgba(255,255,255,0.15); border-radius:10px; padding:14px;">
+        <div style="font-weight:800; font-size:14px; margin-bottom:6px;">Scalar</div>
+        <div style="font-size:12px; opacity:0.85;">Ek number. Example: 5, -3, 0.7</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.15); border-radius:10px; padding:14px;">
+        <div style="font-weight:800; font-size:14px; margin-bottom:6px;">Vector</div>
+        <div style="font-size:12px; opacity:0.85;">Numbers ki line. Example: [2, 5]</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.15); border-radius:10px; padding:14px;">
+        <div style="font-weight:800; font-size:14px; margin-bottom:6px;">Matrix</div>
+        <div style="font-size:12px; opacity:0.85;">Numbers ka grid. Example: [[1,2],[3,4]]</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.15); border-radius:10px; padding:14px;">
+        <div style="font-weight:800; font-size:14px; margin-bottom:6px;">Tensor</div>
+        <div style="font-size:12px; opacity:0.85;">3D+ array. Example: Image (28,28,3)</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.15); border-radius:10px; padding:14px;">
+        <div style="font-weight:800; font-size:14px; margin-bottom:6px;">Transpose</div>
+        <div style="font-size:12px; opacity:0.85;">Rows ↔ Columns. Code: A.T</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.15); border-radius:10px; padding:14px;">
+        <div style="font-weight:800; font-size:14px; margin-bottom:6px;">Dot Product</div>
+        <div style="font-size:12px; opacity:0.85;">[1,2]·[3,4] = 1×3+2×4 = 11</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<footer>
+  <h3>📐 Linear Algebra — Simple Guide</h3>
+  <p>Scalar • Vector • Matrix • Tensor • Transpose • Dot Product • Special Matrices</p>
+  <p style="margin-top: 8px; font-size: 12px; font-family: 'JetBrains Mono', monospace;">2×2 Examples • Python Code • Real Applications</p>
+</footer>
+
+</body>
+</html>

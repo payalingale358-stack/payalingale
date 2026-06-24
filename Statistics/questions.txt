@@ -1,0 +1,112 @@
+ 
+1. A dataset has mean = 50, median = 70. What can you infer about skewness and why?
+
+2. Two datasets have same mean but different variance. Which one is more reliable and why?
+
+3. If all values in a dataset are multiplied by 10, what happens to mean and standard deviation?
+
+4. A dataset contains extreme outliers. Which measure (mean/median/mode) will you trust and why?
+
+5. You have salary data of employees. Which measure will better represent central tendency and why?
+ 
+ 
+6. A right-skewed dataset: mean vs median — which is larger? Explain logically.
+
+7. How would you detect skewness without plotting?
+
+8. Dataset A is symmetric, Dataset B is skewed. How will standard deviation differ conceptually?
+
+9. If kurtosis is very high, what does it imply about tails?
+
+10. Why normal distribution is important in data science?
+ 
+ 
+11. Two datasets have same range but different variance. Explain how this is possible.
+
+12. When is IQR preferred over standard deviation?
+
+13. If standard deviation is zero, what does it imply about data?
+
+14. Dataset with high variance — what risk does it indicate in business context?
+
+15. How does adding an outlier affect variance?
+ 
+ 
+16. A company reports average customer rating = 4.5. What could be misleading here?
+
+17. You have monthly sales data. How will you detect inconsistency?
+
+18. Which measure will you use to compare income inequality?
+
+19. Why median house price is reported instead of mean?
+
+20. If two products have same average rating but different distributions, how will you decide better one?
+ 
+ 
+21. What happens to distribution if you apply log transformation?
+
+22. Why do we standardize data before modeling?
+
+23. Difference between normalization and standardization in simple terms?
+
+24. If data is heavily skewed, what preprocessing step would you apply?
+
+25. Why z-score is useful in outlier detection?
+ 
+ 
+ 
+26. If P(A) = 0.6, P(B) = 0.5, what is max possible P(A ∩ B)?
+
+27. When are two events independent? Give real example.
+
+28. If two events are mutually exclusive, can they be independent? Why?
+
+29. Conditional probability — when is it useful in real-world ML?
+
+30. Explain Bayes theorem in spam detection context.
+ 
+ 
+31. Why do we use sampling instead of full population?
+
+32. What is sampling bias? Give real-world example.
+
+33. What happens if sample size increases?
+
+34. Difference between parameter and statistic?
+
+35. Why random sampling is important?
+ 
+ 
+36. What is null hypothesis in simple terms?
+
+37. Type I vs Type II error — explain using medical test example.
+
+38. If p-value = 0.03 and alpha = 0.05, what decision will you take?
+
+39. Why p-value alone is not enough?
+
+40. What does “statistically significant” actually mean?
+ 
+ 
+41. What does 95% confidence interval mean logically?
+
+42. If confidence level increases, what happens to interval width?
+
+43. Why wide confidence interval is not desirable?
+
+44. If sample size increases, how does CI change?
+
+45. When would you prefer CI over hypothesis testing?
+ 
+ 
+46. You run an A/B test and get small improvement but high p-value. What will you do?
+
+47. Your model accuracy improved from 85% to 86%. How will you check if improvement is real?
+
+48. A feature shows correlation with target. Does it mean causation? Why?
+
+49. You have imbalanced dataset — how will statistical thinking help?
+
+50. When deploying model, why understanding distribution shift is important?
+ 
+ 
